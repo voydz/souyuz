@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.push File.expand_path("../../lib", __FILE__)
+
+require "souyuz"
+require "souyuz/commands_generator"
+Souyuz::CommandsGenerator.start
