@@ -8,20 +8,23 @@ module Souyuz
     def self.set_additional_default_values
       config = Souyuz.config
 
+      # TODO detect_platform automatically for :platform config
+
+      # set correct implicit build platform for android
+      if config[:platform] == Platform::ANDROID
+        config[:build_platform] = 'AnyCPU'
+      end
+
       # Detect the project
       Souyuz.project = Msbuild::Project.new(config)
       detect_solution
-      detect_csproj
+      detect_project # we can only do that *after* we detected the solution
 
-      # TODO handle real configuration and platform (as specified by csproj)
+      doc_csproj = get_parser_handle config[:project_path]
 
-      detect_platform # we can only do that *after* we have the csproj
-
-      detect_manifest # doc (csproj)
-      detect_assembly_name # doc (csproj ios, manifest android)
-      detect_output_path # doc (csproj), config, platform
-
-      config[:output_name] ||= Souyuz.project.app_name
+      detect_output_path doc_csproj
+      detect_manifest doc_csproj
+      detect_assembly_name doc_csproj # we can only do that for android *after* we detected the android manitfest
 
       return config
     end
@@ -31,75 +34,83 @@ module Souyuz
     def self.detect_solution
       return if Souyuz.config[:solution_path]
       itr = 0
-      path = '*.sln'
-      solution = nil
+      query = '*.sln'
 
-      while itr < 3 do
-         files = Dir.glob(path)
-         if (files.any?)
-           solution = files.first
-           break
-         end
-         path = "../#{path}"
+      begin
+         files = Dir.glob(query)
+         query = "../#{query}"
          itr += 1
-      end
+      end until files.any? or itr > 3
 
-      Souyuz.config[:solution_path] = solution
+      sln = files.first # pick first file as solution
+      UI.user_error! 'Not able to find solution file automatically, try to specify it via `solution_path` parameter.' unless sln
+
+      Souyuz.config[:solution_path] = abs_path sln
     end
 
-    def self.detect_csproj
+    def self.detect_project
       return if Souyuz.config[:project_path]
 
       path = Souyuz.config[:solution_path]
       projects = Msbuild::SolutionParser.parse(path)
-        .select { |p| p.is_platform? platform }
+        .get_platform Souyuz.config[:platform]
 
-      csproj = projects.first[:project_file_path]
-      Souyuz.config[:project_path] = failsafe_path csproj
+      UI.user_error! "Not able to find any project in solution, that matches the platform `#{Souyuz.config[:platform]}`." unless projects.any?
+
+      project = projects.first
+      csproj = project.project_path
+      UI.user_error! 'Not able to find project file automatically, try to specify it via `project_path` parameter.' unless csproj
+
+      Souyuz.config[:project_name] = project.project_name
+      Souyuz.config[:project_path] = abs_path csproj
     end
 
-    def self.detect_platform
-      return if Souyuz.config[:platform]
-      Souyuz.config[:platform] = Souyuz.project.platform
+    def self.detect_output_path(doc_csproj)
+      return if Souyuz.config[:output_path]
+
+      configuration = Souyuz.config[:build_configuration]
+      platform = Souyuz.config[:build_platform]
+
+      doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='OutputPath']/text()")
+      Souyuz.config[:output_path] = abs_project_path doc_node.text
     end
 
-    def self.detect_assembly_name
+    def self.detect_manifest(doc_csproj)
+      return if Souyuz.config[:manifest_path] or Souyuz.config[:platform] != Platform::ANDROID
+
+      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
+      Souyuz.config[:manifest_path] = abs_project_path doc_node.text
+    end
+
+    def self.detect_assembly_name(doc_csproj)
       return if Souyuz.config[:assembly_name]
-      platform = Souyuz.config[:platform]
-      
-      if [ :ios, :mac ].include? platform
-        Souyuz.config[:assembly_name] = doc.css('PropertyGroup > AssemblyName').text
-      elsif platform == :android
+
+      if [ Platform::IOS, Platform::MAC ].include? Souyuz.config[:platform]
+        Souyuz.config[:assembly_name] = doc_csproj.css('PropertyGroup > AssemblyName').text
+      elsif Souyuz.config[:platform] == Platform::ANDROID
+        doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed
         Souyuz.config[:assembly_name] = doc.xpath('string(//manifest/@package)')
       end
     end
 
-    def self.detect_output_path
-      if [ :ios, :mac ].include? Souyuz.config[:platform]
-        
-      elsif Souyuz.config[:platform] == :android
-        platform = 'AnyCPU'.downcase
-      end
-
-      doc_node = doc.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='OutputPath']/text()")
-      failsafe_path doc_node.text
-    end
-
-   def self.detect_manifest
-     return if Souyuz.config[:manifest_path] or Souyuz.config[:platform] != :android
-     Souyuz.config[:manifest_path] = failsafe_path doc.css('PropertyGroup > AndroidManifest').text
-    end
-
     private
 
-    def self.get_parser_handle(file)
-      File::open(filename) do |f|
-        doc = Nokogiri::XML(f)   
-      end
+    def self.get_parser_handle(filename)
+      f = File::open(filename)
+      doc = Nokogiri::XML(f)   
+      f.close
+
       return doc
     end
 
-    def self.failsafe_path(path)
+    def self.abs_project_path(path)
+      path = path.gsub('\\', '/') # dir separator fix
+      platform_path = Souyuz.config[:project_path]
+      path = "#{File.dirname platform_path}/#{path}"
+      path
+    end
+
+    def self.abs_path(path)
       path = path.gsub('\\', '/') # dir separator fix
       path = File.expand_path(path) # absolute dir
       path

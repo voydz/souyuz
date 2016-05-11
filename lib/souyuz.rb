@@ -1,4 +1,5 @@
 require 'souyuz/version'
+require 'souyuz/platform'
 require 'souyuz/manager'
 require 'souyuz/runner'
 require 'souyuz/options'

@@ -10,6 +10,10 @@ module Souyuz
       def add_project(project)
         @projects << project
       end
+
+      def get_platform(platform)
+        @projects.select { |p| p.is_platform? platform }
+      end
     end
   end
 end

@@ -8,7 +8,7 @@ module Souyuz
           f.read.split("\n").each do |line|
             if line.start_with? "Project" 
               options = parse_line line
-              solution.add_project Project.new(options)
+              solution.add_project Project.new(options) #maybe we should not use the project class for this
             end
           end
         end
@@ -19,7 +19,7 @@ module Souyuz
       def self.parse_line(line)
         name = get_project_name line
         project_file = get_project_file line
-        return { name: name, project_file_path: project_file }
+        return { project_name: name, project_path: project_file }
       end
 
       def self.get_project_name(project_line)

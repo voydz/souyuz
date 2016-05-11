@@ -7,30 +7,36 @@ module Souyuz
         @options = options
       end
 
-      def name
-        @options[:name]
+      def project_name
+        @options[:project_name]
       end
 
-      def project_file_path
-        @options[:project_file_path]
+      def project_path
+        @options[:project_path]
       end
 
-      def platform
-        return :ios if self.is_platform? :ios
-        return :mac if self.is_platform? :mac
-        return :android if self.is_platform? :android
+      def ios?
+        is_platform? Souyuz::Platform::IOS
+      end
+
+      def mac?
+        is_platform? Souyuz::Platform::MAC
+      end
+
+      def android?
+        is_platform? Souyuz::Platform::ANDROID
       end
 
       def is_platform?(platform)
-        case platform
-        when :ios
-          self.name.downcase.include? 'ios'
-        when :mac
-          self.name.downcase.include? 'mac'
-        when :android
-          self.name.downcase.include? 'droid'
+        return case platform
+          when Souyuz::Platform::IOS 
+            then self.project_name.downcase.include? 'ios'
+          when Souyuz::Platform::MAC 
+            then self.project_name.downcase.include? 'mac'
+          when Souyuz::Platform::ANDROID 
+            then self.project_name.downcase.include? 'droid'
+          else false
         end
-        return false
       end
     end
   end
