@@ -58,7 +58,7 @@ module Souyuz
       UI.user_error! "Not able to find any project in solution, that matches the platform `#{Souyuz.config[:platform]}`." unless projects.any?
 
       project = projects.first
-      csproj = project.project_path
+      csproj = fix_path_relative project.project_path # get path relative to project root
       UI.user_error! 'Not able to find project file automatically, try to specify it via `project_path` parameter.' unless csproj
 
       Souyuz.config[:project_name] = project.project_name
@@ -101,6 +101,12 @@ module Souyuz
       f.close
 
       return doc
+    end
+
+    def self.fix_path_relative(path)
+      root = File.dirname Souyuz.config[:project_path] # failsafe to __FILE__ and __DIR__
+      path = "#{root}/#{path}"
+      path
     end
 
     def self.abs_project_path(path)
