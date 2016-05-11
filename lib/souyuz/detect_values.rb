@@ -104,7 +104,7 @@ module Souyuz
     end
 
     def self.fix_path_relative(path)
-      root = File.dirname Souyuz.config[:project_path] # failsafe to __FILE__ and __DIR__
+      root = File.dirname Souyuz.config[:solution_path] # failsafe to __FILE__ and __DIR__
       path = "#{root}/#{path}"
       path
     end
