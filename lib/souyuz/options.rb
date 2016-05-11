@@ -6,7 +6,6 @@ module Souyuz
     def self.available_options
       [
         FastlaneCore::ConfigItem.new(key: :silent,
-                                     short_option: "-a",
                                      env_name: "SOUYUZ_SILENT",
                                      description: "Hide all information that's not necessary while building",
                                      default_value: false,
@@ -22,7 +21,8 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :build_target,
                                      env_name: "SOUYUZ_BUILD_TARGET",
                                      description: "Xbuild targets to build",
-                                     default_value: 'Build'),
+                                     default_value: [ 'Build' ],
+                                     type: Array),
         FastlaneCore::ConfigItem.new(key: :output_path,
                                      env_name: "SOUYUZ_BUILD_OUTPUT_PATH",
                                      description: "Xbuild output path",

@@ -1,42 +1,31 @@
 module Souyuz
   class Runner
     def run
-      if Souyuz.project.ios? || Souyuz.project.mac?
-        build_ipa
-        compress_and_move_dsym
+      build_app
 
+      if Souyuz.project.ios? or Souyuz.project.mac?
+        compress_and_move_dsym
         path = ipa_file
 
         path
       elsif Souyuz.project.android?
-        build_apk
-
         path = apk_file
+        # jarsign_and_zipalign TODO implement later
 
         path
       end
     end
 
-    #
-    # android build stuff to follow..
-    #
-
-    def build_apk
-      csproj = Souyuz.project.options[:project_path]
-      configuration = Souyuz.project.options[:build_configuration]
-      target = Souyuz.project.options[:build_target]
-
-      # TODO extract to command class
-      xbuild = ENV['MSBUILD_PATH'] || 'xbuild'
-      command = "#{xbuild}"\
-        " /p:Configuration=#{configuration}"\
-        " /t:#{target}"\
-        " #{csproj}"
-
+    def build_app
+      command = BuildCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                           print_all: true,
                                       print_command: !Souyuz.config[:silent])
     end
+
+    #
+    # android build stuff to follow..
+    #
 
     def apk_file
       build_path = Souyuz.project.options[:output_path]
@@ -45,29 +34,21 @@ module Souyuz
       "#{build_path}/#{assembly_name}.apk"
     end
 
-    #
-    # ios build stuff to follow..
-    #
+    def jarsign_and_zipalign
+      command = JavaSignCommandGenerator.generate
+      FastlaneCore::CommandExecutor.execute(command: command,
+                                          print_all: true,
+                                      print_command: !Souyuz.config[:silent])
 
-    def build_ipa
-      solution = Souyuz.project.options[:solution_path]
-      configuration = Souyuz.project.options[:build_configuration]
-      platform = Souyuz.project.options[:build_platform]
-      target = Souyuz.project.options[:build_target]
-
-      # TODO extract to command class
-      xbuild = ENV['SOUYUZ_MSBUILD_PATH'] || 'xbuild'
-      command = "#{xbuild}"\
-          " /p:Configuration=#{configuration}"\
-          " /p:Platform=#{platform}"\
-          " /p:BuildIpa=true"\
-          " /t:#{target}"\
-          " #{solution}"
-
+      command = AndroidZipalignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                           print_all: true,
                                       print_command: !Souyuz.config[:silent])
     end
+
+    #
+    # ios build stuff to follow..
+    #
 
     def package_path
       build_path = Souyuz.project.options[:output_path]

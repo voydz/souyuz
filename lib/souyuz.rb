@@ -1,6 +1,7 @@
 require 'souyuz/version'
 require 'souyuz/platform'
 require 'souyuz/manager'
+require 'souyuz/generators/build_command_generator'
 require 'souyuz/runner'
 require 'souyuz/options'
 require 'souyuz/detect_values'
