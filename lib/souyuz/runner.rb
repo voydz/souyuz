@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Souyuz
   class Runner
     def run

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Souyuz
   module Msbuild
     class SolutionParser

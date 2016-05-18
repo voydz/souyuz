@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'fastlane_core', '>= 0.41.2', '< 1.0.0' # all shared code and dependencies
 
   # Development only
+  s.add_development_dependency 'magic_encoding'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec', '~> 3.1.0'

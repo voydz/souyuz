@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require "fastlane_core"
 
 module Souyuz

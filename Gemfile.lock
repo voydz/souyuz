@@ -36,6 +36,7 @@ GEM
       terminal-table (~> 1.4.5)
     highline (1.7.8)
     json (1.8.3)
+    magic_encoding (0.0.2)
     mini_portile2 (2.0.0)
     multi_json (1.12.0)
     multipart-post (2.0.0)
@@ -66,6 +67,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  magic_encoding
   rake
   rspec (~> 3.1.0)
   souyuz!

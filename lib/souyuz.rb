@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'souyuz/version'
 require 'souyuz/platform'
 require 'souyuz/manager'

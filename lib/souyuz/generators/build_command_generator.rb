@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Souyuz
   # Responsible for building the fully working xbuild command
   class BuildCommandGenerator
