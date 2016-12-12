@@ -2,6 +2,8 @@
 module Souyuz
   class Runner
     def run
+      config = Souyuz.config;
+
       build_app
 
       if Souyuz.project.ios? or Souyuz.project.mac?
@@ -11,7 +13,11 @@ module Souyuz
         path
       elsif Souyuz.project.android?
         path = apk_file
-        # jarsign_and_zipalign TODO implement later
+        if (config[:keystore_path] && config[:keystore_alias])
+          UI.success "Jar it, sign it, zip it..."
+
+          jarsign_and_zipalign
+        end
 
         path
       end
@@ -20,8 +26,8 @@ module Souyuz
     def build_app
       command = BuildCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
-                                          print_all: true,
-                                      print_command: !Souyuz.config[:silent])
+                                            print_all: true,
+                                            print_command: !Souyuz.config[:silent])
     end
 
     #
@@ -32,19 +38,30 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
+      Souyuz.cache[:build_apk_path] = "#{build_path}/#{assembly_name}.apk"
+
       "#{build_path}/#{assembly_name}.apk"
     end
 
     def jarsign_and_zipalign
+      require 'highline/import' # to hide the entered password
+
+      config = Souyuz.config
+      if (!Souyuz.config[:keystore_password])
+        Souyuz.config[:keystore_password] = ask("Password (for #{config[:keystore_alias]}): ") { |q| q.echo = "*" }
+      end
+
       command = JavaSignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
-                                          print_all: true,
-                                      print_command: !Souyuz.config[:silent])
+                                            print_all: false,
+                                            print_command: false)
+
+      UI.success "Successfully signed apk #{Souyuz.cache[:build_apk_path]}"
 
       command = AndroidZipalignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
-                                          print_all: true,
-                                      print_command: !Souyuz.config[:silent])
+                                            print_all: true,
+                                            print_command: !config[:silent])
     end
 
     #

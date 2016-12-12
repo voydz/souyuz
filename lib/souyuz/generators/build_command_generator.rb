@@ -8,7 +8,7 @@ module Souyuz
         parts << "xbuild"
         parts += options
         parts += targets
-        parts << project
+        parts += project
         parts += pipe
 
         parts
@@ -42,15 +42,17 @@ module Souyuz
       end
 
       def project
-        config = Souyuz.config
+        path = []
 
-        Souyuz.config[:project_path] if Souyuz.project.android?
-        Souyuz.config[:solution_path] if Souyuz.project.ios? or Souyuz.project.mac?
+        path << Souyuz.config[:project_path] if Souyuz.project.android?
+        path << Souyuz.config[:solution_path] if Souyuz.project.ios? or Souyuz.project.mac?
+
+        path
       end
 
       def pipe
         pipe = []
- 
+
         pipe
       end
     end

@@ -1,17 +1,22 @@
 # -*- encoding : utf-8 -*-
 module Souyuz
   # Responsible for building the zipalign command
-  # TODO implement
   class AndroidZipalignCommandGenerator
     class << self
       def generate
-       
+        build_apk_path = Souyuz.cache[:build_apk_path]
+        aligned_apk = "#{build_apk_path}-signed"
+
         parts = prefix
+        parts << zipalign_apk
+        parts += options
+        parts << Souyuz.cache[:signed_apk_path]
+        parts << Souyuz.cache[:build_apk_path]
         parts += pipe
 
         parts
       end
-      
+
       def detect_build_tools
         # determine latest buildtool version
         buildtools = File.join(ENV['ANDROID_HOME'], 'build-tools')
@@ -26,8 +31,18 @@ module Souyuz
         buildtools, version = detect_build_tools
         zipalign = ENV['ANDROID_HOME'] ? File.join(buildtools, version, 'zipalign') : 'zipalign'
 
-        sh "\"#{zipalign}\" -f -v 4 #{signed_apk} #{aligned_apk}"
-        Helper.backticks(command, print: !Souyuz.config[:silent])
+        zipalign
+      end
+
+      def options
+        config = Souyuz.config
+
+        options = []
+        options << "-v" if $verbose
+        options << "-f"
+        options << "4"
+
+        options
       end
 
       def prefix
@@ -36,7 +51,7 @@ module Souyuz
 
       def pipe
         pipe = []
- 
+
         pipe
       end
     end

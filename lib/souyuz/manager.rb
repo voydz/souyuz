@@ -7,8 +7,8 @@ module Souyuz
       Souyuz.config = options
 
       FastlaneCore::PrintTable.print_values(config: Souyuz.config,
-                                         hide_keys: [],
-                                             title: "Summary for souyuz #{Souyuz::VERSION}")
+                                            hide_keys: [],
+                                            title: "Summary for souyuz #{Souyuz::VERSION}")
 
       return Runner.new.run
     end
