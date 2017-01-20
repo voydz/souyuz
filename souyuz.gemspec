@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'nokogiri', '~> 1.6'
-  s.add_dependency 'fastlane_core', '>= 0.41.2', '< 1.0.0' # all shared code and dependencies
+  s.add_dependency 'fastlane', '>= 1.9.0' # all shared code and dependencies
 
   # Development only
   s.add_development_dependency 'magic_encoding'
