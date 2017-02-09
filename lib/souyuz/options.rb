@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 require "fastlane_core"
-require "credentials_manager"
 
 module Souyuz
   class Options
@@ -51,6 +50,23 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :manifest_path,
                                      env_name: "SOUYUZ_ANDROID_MANIFEST_PATH",
                                      description: "Path to the android manifest (xml) file",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :keystore_path,
+                                     env_name: "SOUYUZ_ANDROID_KEYSTORE_PATH",
+                                     description: "Path to the keystore",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :keystore_alias,
+                                     env_name: "SOUYUZ_ANDROID_KEYSTORE_ALIAS",
+                                     description: "Alias of the keystore",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :keystore_password,
+                                     env_name: "SOUYUZ_ANDROID_KEYSTORE_PASSWORD",
+                                     description: "Password of the keystore",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :keystore_tsa,
+                                     default_value: 'http://timestamp.digicert.com',
+                                     env_name: "SOUYUZ_ANDROID_KEYSTORE_TSA",
+                                     description: "TSA for jarsigner",
                                      optional: true),
       ]
     end
