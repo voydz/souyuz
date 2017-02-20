@@ -2,7 +2,7 @@
 module Souyuz
   class Runner
     def run
-      config = Souyuz.config;
+      config = Souyuz.config
 
       build_app
 
@@ -44,24 +44,17 @@ module Souyuz
     end
 
     def jarsign_and_zipalign
-      require 'highline/import' # to hide the entered password
-
-      config = Souyuz.config
-      if (!Souyuz.config[:keystore_password])
-        Souyuz.config[:keystore_password] = ask("Password (for #{config[:keystore_alias]}): ") { |q| q.echo = "*" }
-      end
-
       command = JavaSignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: false,
-                                            print_command: false)
+                                            print_command: !Souyuz.config[:silent])
 
       UI.success "Successfully signed apk #{Souyuz.cache[:build_apk_path]}"
 
       command = AndroidZipalignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: true,
-                                            print_command: !config[:silent])
+                                            print_command: !Souyuz.config[:silent])
     end
 
     #
@@ -82,20 +75,18 @@ module Souyuz
     end
 
     def compress_and_move_dsym
-      require 'fileutils'
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
-      dsym_path = "#{build_path}/#{assembly_name}.app.dSYM"
 
-      # compress dsym using zip
-      if File.exists? dsym_path
-        zip = ENV['SOUYUZ_ZIP_PATH'] || 'zip'
-        command = "#{zip} -r #{dsym_path}.zip #{dsym_path}"
-        Helper.backticks(command, print: !Souyuz.config[:silent])
-        dsym_path = "#{dsym_path}.zip"
-      end
+      Souyuz.cache[:build_dsym_path] = "#{build_path}/#{assembly_name}.app.dSYM"
+
+      command = ZipDsymCommandGenerator.generate
+      FastlaneCore::CommandExecutor.execute(command: command,
+                                            print_all: true,
+                                            print_command: !Souyuz.config[:silent])
 
       # move dsym aside ipa
+      dsym_path = "#{dsym_path}.zip"
       if File.exists? dsym_path
         FileUtils.mv(dsym_path, "#{package_path}/#{File.basename dsym_path}")
       end

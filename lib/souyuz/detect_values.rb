@@ -25,6 +25,7 @@ module Souyuz
 
       detect_output_path doc_csproj
       detect_manifest doc_csproj
+      detect_info_plist
       detect_assembly_name doc_csproj # we can only do that for android *after* we detected the android manitfest
 
       return config
@@ -73,7 +74,10 @@ module Souyuz
       platform = Souyuz.config[:build_platform]
 
       doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='OutputPath']/text()")
-      Souyuz.config[:output_path] = abs_project_path doc_node.text
+      output_path = doc_node.text
+      UI.user_error! 'Not able to find output path automatically, try to specify it via `output_path` parameter.' unless output_path
+
+      Souyuz.config[:output_path] = abs_project_path output_path
     end
 
     def self.detect_manifest(doc_csproj)
@@ -81,6 +85,23 @@ module Souyuz
 
       doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
+    end
+
+    def self.detect_info_plist
+      return if Souyuz.config[:plist_path] or Souyuz.config[:platform] != Platform::IOS
+      itr = 0
+      query = 'Info.plist'
+
+      begin
+         files = Dir.glob(query)
+         query = "*/#{query}"
+         itr += 1
+      end until files.any? or itr > 1
+
+      plist_path = files.first # pick first file as solution
+      UI.user_error! 'Not able to find Info.plist automatically, try to specify it via `plist_path` parameter.' unless plist_path
+
+      Souyuz.config[:manifest_path] = abs_project_path plist_path
     end
 
     def self.detect_assembly_name(doc_csproj)

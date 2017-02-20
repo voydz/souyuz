@@ -22,8 +22,8 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.add_dependency 'nokogiri', '~> 1.6'
-  s.add_dependency 'fastlane', '>= 1.9.0' # all shared code and dependencies
+  s.add_dependency 'nokogiri', '~> 1.7'
+  s.add_dependency 'fastlane', '>= 2.2.0' # all shared code and dependencies
 
   # Development only
   s.add_development_dependency 'magic_encoding'
