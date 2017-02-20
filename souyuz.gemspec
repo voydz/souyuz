@@ -23,11 +23,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'nokogiri', '~> 1.7'
-  s.add_dependency 'fastlane', '>= 2.2.0' # all shared code and dependencies
 
   # Development only
   s.add_development_dependency 'magic_encoding'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '~> 3.1.0'
 end

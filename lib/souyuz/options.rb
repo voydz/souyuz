@@ -37,7 +37,7 @@ module Souyuz
                                      optional: true),
         FastlaneCore::ConfigItem.new(key: :platform,
                                      env_name: "SOUYUZ_PLATFORM",
-                                     description: "Targeted device platform (i.e. android, ios, mac)",
+                                     description: "Targeted device platform (i.e. android, ios, osx)",
                                      optional: false),
         FastlaneCore::ConfigItem.new(key: :solution_path,
                                      env_name: "SOUYUZ_SOLUTION_PATH",

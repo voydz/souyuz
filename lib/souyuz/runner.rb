@@ -6,7 +6,7 @@ module Souyuz
 
       build_app
 
-      if Souyuz.project.ios? or Souyuz.project.mac?
+      if Souyuz.project.ios? or Souyuz.project.osx?
         compress_and_move_dsym
         path = ipa_file
 

@@ -45,7 +45,7 @@ module Souyuz
         path = []
 
         path << Souyuz.config[:project_path] if Souyuz.project.android?
-        path << Souyuz.config[:solution_path] if Souyuz.project.ios? or Souyuz.project.mac?
+        path << Souyuz.config[:solution_path] if Souyuz.project.ios? or Souyuz.project.osx?
 
         path
       end

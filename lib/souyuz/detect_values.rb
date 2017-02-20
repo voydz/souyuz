@@ -101,13 +101,13 @@ module Souyuz
       plist_path = files.first # pick first file as solution
       UI.user_error! 'Not able to find Info.plist automatically, try to specify it via `plist_path` parameter.' unless plist_path
 
-      Souyuz.config[:manifest_path] = abs_project_path plist_path
+      Souyuz.config[:plist_path] = abs_project_path plist_path
     end
 
     def self.detect_assembly_name(doc_csproj)
       return if Souyuz.config[:assembly_name]
 
-      if [ Platform::IOS, Platform::MAC ].include? Souyuz.config[:platform]
+      if [ Platform::IOS, Platform::OSX ].include? Souyuz.config[:platform]
         Souyuz.config[:assembly_name] = doc_csproj.css('PropertyGroup > AssemblyName').text
       elsif Souyuz.config[:platform] == Platform::ANDROID
         doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed

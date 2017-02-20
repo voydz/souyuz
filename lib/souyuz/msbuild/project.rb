@@ -20,8 +20,8 @@ module Souyuz
         is_platform? Souyuz::Platform::IOS
       end
 
-      def mac?
-        is_platform? Souyuz::Platform::MAC
+      def osx?
+        is_platform? Souyuz::Platform::OSX
       end
 
       def android?
@@ -32,7 +32,7 @@ module Souyuz
         return case platform
           when Souyuz::Platform::IOS 
             then self.project_name.downcase.include? 'ios'
-          when Souyuz::Platform::MAC 
+          when Souyuz::Platform::OSX 
             then self.project_name.downcase.include? 'mac'
           when Souyuz::Platform::ANDROID 
             then self.project_name.downcase.include? 'droid'

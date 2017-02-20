@@ -10,11 +10,11 @@ module Fastlane
     class SouyuzAction < Action
       def self.run(values)
         require 'souyuz'
+        values[:platform] = ::Souyuz::Platform.from_lane_context(Actions.lane_context)
+        ::Souyuz.config = values
 
-        if Souyuz.project.ios? or Souyuz.project.mac?
-          values[:platform] = Souyuz::Platform::IOS
-
-          absolute_ipa_path = File.expand_path(Souyuz::Manager.new.work(values))
+        if ::Souyuz.project.ios? or ::Souyuz.project.osx?
+          absolute_ipa_path = File.expand_path(::Souyuz::Manager.new.work(values))
           absolute_app_path = File.join(values[:output_path], "#{values[:assembly_name]}.app")
           absolute_dsym_path = absolute_ipa_path.gsub(".ipa", ".app.dSYM.zip")
           
@@ -27,10 +27,8 @@ module Fastlane
           ENV[SharedValues::DSYM_OUTPUT_PATH.to_s] = absolute_dsym_path if File.exist?(absolute_dsym_path)
 
           absolute_ipa_path
-        elsif Souyuz.project.android?
-          values[:platform] = Souyuz::Platform::ANDROID
-
-          absolute_apk_path = File.expand_path(Souyuz::Manager.new.work(values))
+        elsif ::Souyuz.project.android?
+          absolute_apk_path = File.expand_path(::Souyuz::Manager.new.work(values))
 
           Actions.lane_context[SharedValues::GRADLE_BUILD_TYPE] = values[:build_configuration]
           Actions.lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH] = absolute_apk_path
@@ -40,11 +38,11 @@ module Fastlane
       end
 
       def self.description
-        "Easily build and sign your app using `souyuz_ios`"
+        "Easily build and sign your app using `souyuz`"
       end
 
       def self.return_value
-        "The absolute path to the generated ipa file"
+        "The absolute path to the generated app file"
       end
 
       def self.author
@@ -53,11 +51,11 @@ module Fastlane
 
       def self.available_options
         require 'souyuz'
-        Souyuz::Options.available_options
+        ::Souyuz::Options.available_options
       end
 
       def self.is_supported?(platform)
-        [:android, :ios, :mac].include? platform
+        true
       end
     end
   end
