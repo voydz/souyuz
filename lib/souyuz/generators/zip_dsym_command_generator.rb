@@ -5,7 +5,7 @@ module Souyuz
     class << self
       def generate
         parts = prefix
-        parts << detect_jarsigner_executable
+        parts << detect_zip_executable
         parts += options
         parts << build_apk_path
         parts += pipe

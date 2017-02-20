@@ -1,5 +1,5 @@
 # -*- encoding : utf-8 -*-
 module Souyuz
-  VERSION = "0.5.7"
+  VERSION = "0.6.0"
   DESCRIPTION = "A fastlane component to make Xamarin builds a breeze"
 end
