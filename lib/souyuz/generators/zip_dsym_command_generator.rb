@@ -7,7 +7,6 @@ module Souyuz
         parts = prefix
         parts << detect_zip_executable
         parts += options
-        parts << build_apk_path
         parts += pipe
 
         parts
