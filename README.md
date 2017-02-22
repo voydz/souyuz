@@ -1,6 +1,8 @@
 # Souyuz
 
-A fastlane component to make Xamarin builds a breeze. *Souyuz is now avaialbe as an Fastlane plugin see [fastlane-plugin-souyuz](fastlane-plugin-souyuz) for details.*
+A fastlane component to make Xamarin builds a breeze. Souyuz is now avaialbe as an **Fastlane plugin** see [fastlane-plugin-souyuz](fastlane-plugin-souyuz) for details.
+
+*NOTE: While souyuz should continue working with your existing configuration just fine, consider using the Fastlane plugin.*
 
 ## ToDos
 

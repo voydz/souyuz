@@ -34,10 +34,10 @@ module Souyuz
         options << "-verbose" if $verbose
         options << "-sigalg MD5withRSA"
         options << "-digestalg SHA1"
-        options << "-storepass #{config[:keystore_password]}"
-        options << "-keystore #{config[:keystore_path]}"
+        options << "-storepass \"#{config[:keystore_password]}\""
+        options << "-keystore \"#{config[:keystore_path]}\""
         options << "-tsa #{config[:keystore_tsa]}"
-        options << "-signedjar #{Souyuz.cache[:signed_apk_path]}"
+        options << "-signedjar \"#{Souyuz.cache[:signed_apk_path]}\""
 
         options
       end
