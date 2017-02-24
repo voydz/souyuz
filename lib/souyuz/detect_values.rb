@@ -90,7 +90,7 @@ module Souyuz
     def self.detect_info_plist
       return if Souyuz.config[:plist_path] or Souyuz.config[:platform] != Platform::IOS
       itr = 0
-      query = 'Info.plist'
+      query = '../Info.plist'
 
       begin
          files = Dir.glob(query)

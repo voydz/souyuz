@@ -65,7 +65,18 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      package_path = Dir.glob("#{build_path}/#{assembly_name} *").sort.last
+      # in the upcomming switch we determin the output path of iOS ipa files
+      # those change in the Xamarin.iOS Cycle 9 release
+      # see https://developer.xamarin.com/releases/ios/xamarin.ios_10/xamarin.ios_10.4/
+      if File.exists? "#{build_path}/#{assembly_name}.ipa"
+        # after Xamarin.iOS Cycle 9
+        package_path = build_path
+      else
+        # before Xamarin.iOS Cycle 9
+        package_path = Dir.glob("#{build_path}/#{assembly_name} *").sort.last
+      end
+
+      package_path
     end
 
     def ipa_file
