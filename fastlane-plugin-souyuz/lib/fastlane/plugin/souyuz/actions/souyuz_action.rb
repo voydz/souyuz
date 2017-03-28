@@ -28,8 +28,11 @@ module Fastlane
 
           absolute_ipa_path
         elsif ::Souyuz.project.android?
-          if (!values[:keystore_password])
-            ::Souyuz.config[:keystore_password] = ask("Password (for #{values[:keystore_alias]}): ") { |q| q.echo = "*" }
+          # check if keystore vars are set but password is missing
+          if (values[:keystore_path] && values[:keystore_alias])
+            if (!values[:keystore_password])
+              ::Souyuz.config[:keystore_password] = ask("Password (for #{values[:keystore_alias]}): ") { |q| q.echo = "*" }
+            end
           end
           absolute_apk_path = File.expand_path(::Souyuz::Manager.new.work(values))
 
