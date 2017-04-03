@@ -17,7 +17,7 @@ module Fastlane
           absolute_ipa_path = File.expand_path(::Souyuz::Manager.new.work(values))
           absolute_app_path = File.join(values[:output_path], "#{values[:assembly_name]}.app")
           absolute_dsym_path = absolute_ipa_path.gsub(".ipa", ".app.dSYM.zip")
-          
+
           Actions.lane_context[SharedValues::APP_OUTPUT_PATH] = absolute_app_path
           Actions.lane_context[SharedValues::IPA_OUTPUT_PATH] = absolute_ipa_path
           Actions.lane_context[SharedValues::DSYM_OUTPUT_PATH] = absolute_dsym_path if File.exist?(absolute_dsym_path)
@@ -28,6 +28,12 @@ module Fastlane
 
           absolute_ipa_path
         elsif ::Souyuz.project.android?
+          # check if keystore vars are set but password is missing
+          if (values[:keystore_path] && values[:keystore_alias])
+            if (!values[:keystore_password])
+              ::Souyuz.config[:keystore_password] = ask("Password (for #{values[:keystore_alias]}): ") { |q| q.echo = "*" }
+            end
+          end
           absolute_apk_path = File.expand_path(::Souyuz::Manager.new.work(values))
 
           Actions.lane_context[SharedValues::GRADLE_BUILD_TYPE] = values[:build_configuration]
