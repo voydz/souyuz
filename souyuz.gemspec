@@ -26,6 +26,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'highline', '~> 1.7'
 
   # Development only
+  s.add_dependency 'rspec'
+  s.add_dependency 'rubocop'
+  
   s.add_development_dependency 'magic_encoding'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'
