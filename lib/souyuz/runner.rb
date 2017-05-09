@@ -89,8 +89,14 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      Souyuz.cache[:build_dsym_path] = "#{build_path}/#{assembly_name}.app.dSYM"
+      build_dsym_path = "#{build_path}/#{assembly_name}.app.dSYM"
+      if not File.exists? build_dsym_path
+        UI.success "Did not found dSYM at #{build_dsym_path}, skipping..."
+        return
+      end
 
+      Souyuz.cache[:build_dsym_path] = build_dsym_path
+      
       command = ZipDsymCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: true,
