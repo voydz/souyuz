@@ -14,7 +14,8 @@ module Fastlane
         ::Souyuz.config = values
 
         if ::Souyuz.project.ios? or ::Souyuz.project.osx?
-          absolute_ipa_path = File.expand_path(::Souyuz::Manager.new.work(values))
+          ::Souyuz::Manager.new.work(values)
+          absolute_ipa_path = File.join(values[:output_path], "#{values[:assembly_name]}.ipa")
           absolute_app_path = File.join(values[:output_path], "#{values[:assembly_name]}.app")
           absolute_dsym_path = absolute_ipa_path.gsub(".ipa", ".app.dSYM.zip")
 
