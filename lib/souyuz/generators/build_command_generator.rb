@@ -1,11 +1,11 @@
 # -*- encoding : utf-8 -*-
 module Souyuz
-  # Responsible for building the fully working xbuild command
+  # Responsible for building the fully working build command
   class BuildCommandGenerator
     class << self
       def generate
         parts = prefix
-        parts << "xbuild"
+        parts << compiler_bin
         parts += options
         parts += targets
         parts += project
@@ -16,6 +16,10 @@ module Souyuz
 
       def prefix
         ["set -o pipefail &&"]
+      end
+
+      def compiler_bin
+        Souyuz.config[:compiler_bin]
       end
 
       def options
