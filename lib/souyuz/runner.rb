@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+require 'fastlane'
+
 module Souyuz
   class Runner
     def run

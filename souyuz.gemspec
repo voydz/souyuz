@@ -24,10 +24,12 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'nokogiri', '~> 1.7'
   s.add_dependency 'highline', '~> 1.7'
+  s.add_dependency 'fastlane', '>= 1.103.0'
 
   # Development only
-  s.add_dependency 'rspec'
-  s.add_dependency 'rubocop'
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rubocop'
   
   s.add_development_dependency 'magic_encoding'
   s.add_development_dependency 'bundler'

@@ -13,7 +13,7 @@ require 'souyuz/msbuild/project'
 require 'souyuz/msbuild/solution'
 require 'souyuz/msbuild/solution_parser'
 
-require 'fastlane_core'
+require 'fastlane'
 
 module Souyuz
   class << self

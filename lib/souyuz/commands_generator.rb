@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 require "commander"
-require "fastlane_core"
+require "fastlane"
 
 HighLine.track_eof = false
 
