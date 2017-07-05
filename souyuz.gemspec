@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = Souyuz::DESCRIPTION
   s.authors     = ["Felix Rudat"]
   s.email       = 'voydz@hotmail.com'
-  s.homepage    = 'http://rubygems.org/gems/souyuz'
+  s.homepage    = 'https://github.com/voydz/souyuz'
   s.license     = 'MIT'
 
   s.required_ruby_version = ">= 2.0.0"

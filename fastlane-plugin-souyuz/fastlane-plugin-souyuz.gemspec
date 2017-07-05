@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = 'voydz@hotmail.com'
 
   spec.summary       = %q{A fastlane component to make Xamarin builds a breeze}
-  spec.homepage      = 'http://rubygems.org/gems/fastlane-plugin-souyuz'
+  spec.homepage      = 'https://github.com/voydz/souyuz/tree/master/fastlane-plugin-souyuz'
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)
