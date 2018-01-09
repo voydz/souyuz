@@ -27,6 +27,7 @@ module Souyuz
 
         options = []
         options << "/p:Configuration=#{config[:build_configuration]}" if config[:build_configuration]
+        options << config[:extra_build_options] if config[:extra_build_options]
         options << "/p:Platform=#{config[:build_platform]}" if Souyuz.project.ios? and config[:build_platform]
         options << "/p:BuildIpa=true" if Souyuz.project.ios?
         if (config[:solution_path])
