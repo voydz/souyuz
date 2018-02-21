@@ -1,12 +1,10 @@
 # -*- encoding : utf-8 -*-
+
 module Souyuz
   # Responsible for building the zipalign command
   class AndroidZipalignCommandGenerator
     class << self
       def generate
-        build_apk_path = Souyuz.cache[:build_apk_path]
-        aligned_apk = "#{build_apk_path}-signed"
-
         parts = prefix
         parts << zipalign_apk
         parts += options
@@ -35,8 +33,6 @@ module Souyuz
       end
 
       def options
-        config = Souyuz.config
-
         options = []
         options << "-v" if $verbose
         options << "-f"

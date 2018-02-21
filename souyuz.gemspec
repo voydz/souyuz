@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
@@ -24,13 +25,13 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'nokogiri', '~> 1.7'
   s.add_dependency 'highline', '~> 1.7'
-  s.add_dependency 'fastlane', '>= 1.103.0'
+  s.add_dependency 'fastlane', '>= 2.29.0'
 
   # Development only
   s.add_development_dependency 'pry'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rubocop'
-  
+
   s.add_development_dependency 'magic_encoding'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'

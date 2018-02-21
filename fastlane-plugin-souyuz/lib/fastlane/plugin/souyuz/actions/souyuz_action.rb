@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 module Fastlane
   module Actions
     module SharedValues
@@ -29,8 +30,8 @@ module Fastlane
           absolute_ipa_path
         elsif ::Souyuz.project.android?
           # check if keystore vars are set but password is missing
-          if (values[:keystore_path] && values[:keystore_alias])
-            if (!values[:keystore_password])
+          if values[:keystore_path] && values[:keystore_alias]
+            unless values[:keystore_password]
               ::Souyuz.config[:keystore_password] = ask("Password (for #{values[:keystore_alias]}): ") { |q| q.echo = "*" }
             end
           end

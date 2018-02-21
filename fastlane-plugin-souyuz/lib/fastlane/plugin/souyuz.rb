@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 require 'fastlane/plugin/souyuz/version'
 
 module Fastlane

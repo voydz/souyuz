@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'fastlane/plugin/souyuz/version'
@@ -6,10 +7,10 @@ require 'fastlane/plugin/souyuz/version'
 Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-souyuz'
   spec.version       = Fastlane::Souyuz::VERSION
-  spec.author        = %q{Felix Rudat}
+  spec.author        = 'Felix Rudat'
   spec.email         = 'voydz@hotmail.com'
 
-  spec.summary       = %q{A fastlane component to make Xamarin builds a breeze}
+  spec.summary       = 'A fastlane component to make Xamarin builds a breeze'
   spec.homepage      = 'https://github.com/voydz/souyuz'
   spec.license       = "MIT"
 

@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 require 'nokogiri'
 
 module Souyuz
@@ -9,7 +10,7 @@ module Souyuz
     def self.set_additional_default_values
       config = Souyuz.config
 
-      # TODO detect_platform automatically for :platform config
+      # TODO: detect_platform automatically for :platform config
 
       # set correct implicit build platform for android
       if config[:platform] == Platform::ANDROID
@@ -38,11 +39,12 @@ module Souyuz
       itr = 0
       query = '*.sln'
 
-      begin
-         files = Dir.glob(query)
-         query = "../#{query}"
-         itr += 1
-      end until files.any? or itr > 3
+      loop do
+        files = Dir.glob(query)
+        query = "../#{query}"
+        itr += 1
+        break unless files.any? or itr > 3
+      end
 
       sln = files.first # pick first file as solution
       UI.user_error! 'Not able to find solution file automatically, try to specify it via `solution_path` parameter.' unless sln
@@ -55,7 +57,7 @@ module Souyuz
 
       path = Souyuz.config[:solution_path]
       projects = Msbuild::SolutionParser.parse(path)
-        .get_platform Souyuz.config[:platform]
+                                        .get_platform Souyuz.config[:platform]
 
       UI.user_error! "Not able to find any project in solution, that matches the platform `#{Souyuz.config[:platform]}`." unless projects.any?
 
@@ -92,11 +94,12 @@ module Souyuz
       itr = 0
       query = '../Info.plist'
 
-      begin
-         files = Dir.glob(query)
-         query = "*/#{query}"
-         itr += 1
-      end until files.any? or itr > 1
+      loop do
+        files = Dir.glob(query)
+        query = "*/#{query}"
+        itr += 1
+        break unless files.any? or itr > 1
+      end
 
       plist_path = files.first # pick first file as solution
       UI.user_error! 'Not able to find Info.plist automatically, try to specify it via `plist_path` parameter.' unless plist_path
@@ -107,7 +110,7 @@ module Souyuz
     def self.detect_assembly_name(doc_csproj)
       return if Souyuz.config[:assembly_name]
 
-      if [ Platform::IOS, Platform::OSX ].include? Souyuz.config[:platform]
+      if [Platform::IOS, Platform::OSX].include? Souyuz.config[:platform]
         Souyuz.config[:assembly_name] = doc_csproj.css('PropertyGroup > AssemblyName').text
       elsif Souyuz.config[:platform] == Platform::ANDROID
         doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed
@@ -115,11 +118,11 @@ module Souyuz
       end
     end
 
-    private
+    private_class_method
 
     def self.get_parser_handle(filename)
-      f = File::open(filename)
-      doc = Nokogiri::XML(f)   
+      f = File.open(filename)
+      doc = Nokogiri::XML(f)
       f.close
 
       return doc
@@ -143,5 +146,5 @@ module Souyuz
       path = File.expand_path(path) # absolute dir
       path
     end
-  end 
+  end
 end

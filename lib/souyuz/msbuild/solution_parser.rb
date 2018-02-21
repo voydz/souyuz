@@ -1,15 +1,16 @@
 # -*- encoding : utf-8 -*-
+
 module Souyuz
   module Msbuild
     class SolutionParser
       def self.parse(filename)
         solution = Solution.new
 
-        File::open(filename) do |f|
+        File.open(filename) do |f|
           f.read.split("\n").each do |line|
-            if line.start_with? "Project" 
+            if line.start_with? "Project"
               options = parse_line line
-              solution.add_project Project.new(options) #maybe we should not use the project class for this
+              solution.add_project Project.new(options) # maybe we should not use the project class for this
             end
           end
         end
