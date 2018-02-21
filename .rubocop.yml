@@ -1,6 +1,3 @@
-Style/MultipleComparison:
-  Enabled: false
-
 Style/PercentLiteralDelimiters:
   Enabled: false
 
@@ -45,11 +42,6 @@ Style/VariableNumber:
 Style/MethodMissing:
   Enabled: false
 
-# This rule isn't useful, lots of discussion happening around it also
-# e.g. https://github.com/bbatsov/rubocop/issues/2338
-MultilineBlockChain:
-  Enabled: false
-
 #
 #   File.chmod(0777, f)
 #
@@ -84,14 +76,14 @@ Lint/UselessAssignment:
     - '**/spec/**/*'
 
 # We could potentially enable the 2 below:
-Layout/IndentHash:
+Style/IndentHash:
   Enabled: false
 
-Layout/AlignHash:
+Style/AlignHash:
   Enabled: false
 
 # HoundCI doesn't like this rule
-Layout/DotPosition:
+Style/DotPosition:
   Enabled: false
 
 # We allow !! as it's an easy way to convert ot boolean
@@ -103,7 +95,7 @@ Style/SymbolArray:
   Enabled: false
 
 # We still support Ruby 2.0.0
-Layout/IndentHeredoc:
+Style/IndentHeredoc:
   Enabled: false
 
 # This cop would not work fine with rspec
@@ -179,6 +171,9 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 18
 
+BlockNesting:
+  Max: 4
+
 # Sometimes it's easier to read without guards
 Style/GuardClause:
   Enabled: false
@@ -217,12 +212,11 @@ Style/PerlBackrefs:
   Enabled: false
 
 # Disable '+ should be surrounded with a single space' for xcodebuild_spec.rb
-Layout/SpaceAroundOperators:
+Style/SpaceAroundOperators:
   Exclude:
     - '**/spec/actions_specs/xcodebuild_spec.rb'
 
 AllCops:
-  TargetRubyVersion: 2.2
   Include:
     - '**/fastlane/Fastfile'
   Exclude:
@@ -232,6 +226,7 @@ AllCops:
 # They have not to be snake_case
 Style/FileName:
   Exclude:
+    - '**/fastlane-plugin-souyuz.gemspec'
     - '**/Dangerfile'
     - '**/Brewfile'
     - '**/Gemfile'
@@ -240,7 +235,6 @@ Style/FileName:
     - '**/Fastfile'
     - '**/Deliverfile'
     - '**/Snapfile'
-    - '**/*.gemspec'
 
 # We're not there yet
 Style/Documentation:
@@ -260,7 +254,4 @@ Style/IfInsideElse:
 
 # Sometimes we just want to 'collect'
 Style/CollectionMethods:
-  Enabled: false
-
-Lint/UnneededDisable:
   Enabled: false
