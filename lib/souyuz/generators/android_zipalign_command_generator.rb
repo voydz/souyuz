@@ -18,6 +18,8 @@ module Souyuz
       end
 
       def detect_build_tools
+        UI.user_error! "Please ensure that the Android SDK is installed and the ANDROID_HOME variable is set correctly" unless ENV['ANDROID_HOME']
+
         # determine latest buildtool version
         buildtools = File.join(ENV['ANDROID_HOME'], 'build-tools')
         version = Dir.entries(buildtools).sort.last
