@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 module Fastlane
   module Actions
     class AppVersionAction < Action

@@ -1,5 +1,3 @@
-# coding: utf-8
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'fastlane/plugin/souyuz/version'
@@ -20,8 +18,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'souyuz', ">= 0.7.0"
 
-  spec.add_development_dependency 'pry'
   spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake'
   spec.add_development_dependency 'fastlane', '>= 1.103.0'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'rake'
 end

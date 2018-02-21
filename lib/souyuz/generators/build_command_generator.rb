@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 module Souyuz
   # Responsible for building the fully working build command
   class BuildCommandGenerator

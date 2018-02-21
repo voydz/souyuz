@@ -1,5 +1,3 @@
-# -*- encoding : utf-8 -*-
-
 module Souyuz
   # Responsible for building the zip dsym command
   class ZipDsymCommandGenerator
