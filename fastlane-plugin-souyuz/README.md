@@ -10,6 +10,33 @@ This project is a [fastlane](https://github.com/fastlane/fastlane) plugin. To ge
 fastlane add_plugin souyuz
 ```
 
+## Example
+
+Check out the following lanes to see how to use souyuz.
+
+```ruby
+platform :ios do
+  lane :example do
+    souyuz(
+      platform: "ios",
+      build_configuration: "Release",
+      plist_path: "./iOS/Info.plist"
+    )
+  end
+end
+platform :android do
+  lane :example do
+    souyuz(
+      platform: "android",
+      build_configuration: "Release",
+      keystore_path: "{PATH_TO_YOUR_KEYSTORE}",
+      keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}",
+      keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}"
+    )
+  end
+end
+```
+
 ## About souyuz
 
 A fastlane component to make Xamarin builds a breeze
