@@ -12,7 +12,7 @@ fastlane add_plugin souyuz
 
 ## Example
 
-Check out the following lanes to see how to use souyuz.
+Check out the following lanes or the [example `Fastfile`](fastlane/Fastfile) to see how to use souyuz.
 
 ```ruby
 platform :ios do
