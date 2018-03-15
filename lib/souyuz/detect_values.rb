@@ -34,17 +34,8 @@ module Souyuz
 
     def self.detect_solution
       return if Souyuz.config[:solution_path]
-      itr = 0
-      query = '*.sln'
 
-      loop do
-        files = Dir.glob(query)
-        query = "../#{query}"
-        itr += 1
-        break unless files.any? or itr > 3
-      end
-
-      sln = files.first # pick first file as solution
+      sln = find_file('*.sln', 3) # search for solution
       UI.user_error! 'Not able to find solution file automatically, try to specify it via `solution_path` parameter.' unless sln
 
       Souyuz.config[:solution_path] = abs_path sln
@@ -89,17 +80,8 @@ module Souyuz
 
     def self.detect_info_plist
       return if Souyuz.config[:plist_path] or Souyuz.config[:platform] != Platform::IOS
-      itr = 0
-      query = '../Info.plist'
 
-      loop do
-        files = Dir.glob(query)
-        query = "*/#{query}"
-        itr += 1
-        break unless files.any? or itr > 1
-      end
-
-      plist_path = files.first # pick first file as solution
+      plist_path = find_file('Info.plist', 1) # search for plist
       UI.user_error! 'Not able to find Info.plist automatically, try to specify it via `plist_path` parameter.' unless plist_path
 
       Souyuz.config[:plist_path] = abs_project_path plist_path
@@ -117,6 +99,20 @@ module Souyuz
     end
 
     private_class_method
+
+    def self.find_file(query, depth)
+      itr = 0
+      files = []
+
+      loop do
+        files = Dir.glob(query)
+        query = "../#{query}"
+        itr += 1
+        break if files.any? or itr > depth
+      end
+
+      return files.first # pick first file
+    end
 
     def self.get_parser_handle(filename)
       f = File.open(filename)
