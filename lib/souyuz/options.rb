@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require "fastlane"
 
 module Souyuz
@@ -25,7 +24,7 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :build_target,
                                      env_name: "SOUYUZ_BUILD_TARGET",
                                      description: "Build targets to build",
-                                     default_value: [ 'Build' ],
+                                     default_value: ['Build'],
                                      type: Array),
         FastlaneCore::ConfigItem.new(key: :output_path,
                                      env_name: "SOUYUZ_BUILD_OUTPUT_PATH",
@@ -75,7 +74,7 @@ module Souyuz
                                      default_value: 'http://timestamp.digicert.com',
                                      env_name: "SOUYUZ_ANDROID_KEYSTORE_TSA",
                                      description: "TSA for jarsigner",
-                                     optional: true),
+                                     optional: true)
       ]
     end
   end

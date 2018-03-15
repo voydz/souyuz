@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require 'fastlane'
 
 module Souyuz
@@ -15,7 +14,7 @@ module Souyuz
         path
       elsif Souyuz.project.android?
         path = apk_file
-        if (config[:keystore_path] && config[:keystore_alias])
+        if config[:keystore_path] && config[:keystore_alias]
           UI.success "Jar it, sign it, zip it..."
 
           jarsign_and_zipalign
@@ -70,7 +69,7 @@ module Souyuz
       # in the upcomming switch we determin the output path of iOS ipa files
       # those change in the Xamarin.iOS Cycle 9 release
       # see https://developer.xamarin.com/releases/ios/xamarin.ios_10/xamarin.ios_10.4/
-      if File.exists? "#{build_path}/#{assembly_name}.ipa"
+      if File.exist? "#{build_path}/#{assembly_name}.ipa"
         # after Xamarin.iOS Cycle 9
         package_path = build_path
       else
@@ -92,13 +91,13 @@ module Souyuz
       assembly_name = Souyuz.project.options[:assembly_name]
 
       build_dsym_path = "#{build_path}/#{assembly_name}.app.dSYM"
-      if not File.exists? build_dsym_path
+      unless File.exist? build_dsym_path
         UI.success "Did not found dSYM at #{build_dsym_path}, skipping..."
         return
       end
 
       Souyuz.cache[:build_dsym_path] = build_dsym_path
-      
+
       command = ZipDsymCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: true,
@@ -106,7 +105,7 @@ module Souyuz
 
       # move dsym aside ipa
       dsym_path = "#{dsym_path}.zip"
-      if File.exists? dsym_path
+      if File.exist? dsym_path
         FileUtils.mv(dsym_path, "#{package_path}/#{File.basename dsym_path}")
       end
     end

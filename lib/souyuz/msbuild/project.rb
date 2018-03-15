@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 module Souyuz
   module Msbuild
     class Project
@@ -30,14 +29,14 @@ module Souyuz
 
       def is_platform?(platform)
         return case platform
-          when Souyuz::Platform::IOS 
+               when Souyuz::Platform::IOS
             then self.project_name.downcase.include? 'ios'
-          when Souyuz::Platform::OSX 
+               when Souyuz::Platform::OSX
             then self.project_name.downcase.include? 'mac'
-          when Souyuz::Platform::ANDROID 
+               when Souyuz::Platform::ANDROID
             then self.project_name.downcase.include? 'droid'
-          else false
-        end
+               else false
+               end
       end
     end
   end

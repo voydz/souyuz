@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 module Fastlane
   module Actions
     class AppVersionAction < Action
@@ -42,9 +41,9 @@ module Fastlane
         manifest_path ||= ::Souyuz.config[:manifest_path]
 
         # parse the doc
-        f = File.open(manifest_path)
-        doc = Nokogiri::XML(f)
-        f.close
+        f1 = File.open(manifest_path)
+        doc = Nokogiri::XML(f1)
+        f1.close
 
         attrs = doc.xpath('//manifest')[0]
 
@@ -56,8 +55,8 @@ module Fastlane
           attrs['android:versionCode'] = build if build
 
           # save the doc
-          File.open(manifest_path, 'w') do |f| 
-              f.print(doc.to_xml) 
+          File.open(manifest_path, 'w') do |f2|
+            f2.print(doc.to_xml)
           end
         end
 
@@ -83,8 +82,9 @@ module Fastlane
             FastlaneCore::ConfigItem.new(key: :build,
                                          env_name: "FL_APP_BUILD",
                                          description: "App build number value",
-                                         optional: true),
-          ])
+                                         optional: true)
+          ]
+        )
       end
 
       def self.is_supported?(platform)
