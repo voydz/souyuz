@@ -17,7 +17,7 @@ module Souyuz
       end
 
       def prefix
-        ["set -o pipefail &&"]
+        [""]
       end
 
       def detect_jarsigner_executable

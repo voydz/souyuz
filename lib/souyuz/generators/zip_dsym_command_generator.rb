@@ -12,7 +12,7 @@ module Souyuz
       end
 
       def prefix
-        ["set -o pipefail &&"]
+        [""]
       end
 
       def detect_zip_executable

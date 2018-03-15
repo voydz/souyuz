@@ -42,7 +42,7 @@ module Souyuz
       end
 
       def prefix
-        ["set -o pipefail &&"]
+        [""]
       end
 
       def pipe
