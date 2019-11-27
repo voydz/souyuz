@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ["lib"]
 
-  s.add_dependency 'fastlane', '>= 2.29.0'
+  s.add_dependency 'fastlane', '>= 1.103.0'
   s.add_dependency 'highline', '~> 1.7'
   s.add_dependency 'nokogiri', '~> 1.7'
 
