@@ -1,3 +1,5 @@
+require 'fastlane/plugin/souyuz/version'
+
 module Fastlane
   module Souyuz
     # Return all .rb files inside the "actions" and "helper" directory

@@ -1,17 +1,11 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-# Also load main component library
-lib = File.expand_path("../../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
-require "souyuz/version"
+require 'fastlane/plugin/souyuz/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-souyuz'
-  spec.version       = Souyuz::VERSION
-  spec.summary       = Souyuz::DESCRIPTION
-  spec.description   = Souyuz::DESCRIPTION
+  spec.version       = Fastlane::Souyuz::VERSION
   spec.author        = 'Felix Rudat'
   spec.email         = 'voydz@hotmail.com'
 
@@ -23,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'souyuz', Souyuz::VERSION
+  spec.add_dependency 'souyuz', Fastlane::Souyuz::VERSION
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'fastlane', '>= 1.103.0'
