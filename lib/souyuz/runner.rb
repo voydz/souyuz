@@ -37,9 +37,10 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      Souyuz.cache[:build_apk_path] = "#{build_path}/#{assembly_name}.apk"
+      build_apk_path = "#{build_path}/#{assembly_name}.apk"
+      Souyuz.cache[:build_apk_path] = build_apk_path
 
-      "#{build_path}/#{assembly_name}.apk"
+      build_apk_path
     end
 
     def apksign_and_zipalign
@@ -54,6 +55,12 @@ module Souyuz
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: false,
                                             print_command: !Souyuz.config[:silent])
+
+      # move signed apk back to build apk path
+      FileUtils.cp_r(
+        Souyuz.cache[:signed_apk_path],
+        Souyuz.cache[:build_apk_path],
+        :remove_destination => true)
 
       UI.success "Successfully signed apk #{Souyuz.cache[:build_apk_path]}"
     end
