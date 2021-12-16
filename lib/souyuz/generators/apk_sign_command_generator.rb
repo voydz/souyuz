@@ -27,7 +27,7 @@ module Souyuz
 
       def options
         options = []
-        options << "sign" if $verbose
+        options << "sign"
         options << "--verbose" if $verbose
         options << "--ks \"#{Souyuz.config[:keystore_path]}\""
         options << "--ks-pass \"#{Souyuz.config[:keystore_password]}\""
