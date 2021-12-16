@@ -24,6 +24,7 @@ module Souyuz
 
       detect_output_path doc_csproj
       detect_manifest doc_csproj
+      detect_build_tools
       detect_info_plist
       detect_assembly_name doc_csproj # we can only do that for android *after* we detected the android manitfest
 
@@ -76,6 +77,20 @@ module Souyuz
 
       doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
+    end
+
+    def self.detect_build_tools
+      return if Souyuz.config[:buildtools_path]
+
+      UI.user_error! "Please ensure that the Android SDK is installed and the ANDROID_HOME variable is set correctly" unless ENV['ANDROID_HOME']
+
+      # determine latest buildtool version
+      buildtools = File.join(ENV['ANDROID_HOME'], 'build-tools')
+      version = Dir.entries(buildtools).sort.last
+
+      UI.success "Using Buildtools Version: #{version}..."
+
+      Souyuz.config[:buildtools_path] = File.join(buildtools, version)
     end
 
     def self.detect_info_plist

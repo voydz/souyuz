@@ -1,6 +1,6 @@
 module Souyuz
   # Responsible for building the zipalign command
-  class AndroidZipalignCommandGenerator
+  class ZipalignCommandGenerator
     class << self
       def generate
         parts = prefix
@@ -13,21 +13,8 @@ module Souyuz
         parts
       end
 
-      def detect_build_tools
-        UI.user_error! "Please ensure that the Android SDK is installed and the ANDROID_HOME variable is set correctly" unless ENV['ANDROID_HOME']
-
-        # determine latest buildtool version
-        buildtools = File.join(ENV['ANDROID_HOME'], 'build-tools')
-        version = Dir.entries(buildtools).sort.last
-
-        UI.success "Using Buildtools Version: #{version}..."
-
-        [buildtools, version]
-      end
-
       def zipalign_apk
-        buildtools, version = detect_build_tools
-        zipalign = ENV['ANDROID_HOME'] ? File.join(buildtools, version, 'zipalign') : 'zipalign'
+        zipalign = File.join(Souyuz.config[:buildtools_path], 'zipalign')
 
         zipalign
       end

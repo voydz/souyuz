@@ -58,6 +58,10 @@ module Souyuz
                                      env_name: "SOUYUZ_ANDROID_MANIFEST_PATH",
                                      description: "Path to the android manifest (xml) file",
                                      optional: true),
+        FastlaneCore::ConfigItem.new(key: :buildtools_path,
+                                     env_name: "SOUYUZ_ANDROID_BUILDTOOLS_PATH",
+                                     description: "Path to the android build tools",
+                                     optional: true),
         FastlaneCore::ConfigItem.new(key: :plist_path,
                                      env_name: "SOUYUZ_IOS_PLIST_PATH",
                                      description: "Path to the iOS plist file",
@@ -77,7 +81,7 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :keystore_tsa,
                                      default_value: 'http://timestamp.digicert.com',
                                      env_name: "SOUYUZ_ANDROID_KEYSTORE_TSA",
-                                     description: "TSA for jarsigner",
+                                     description: "TSA for apksigner",
                                      optional: true)
       ]
     end

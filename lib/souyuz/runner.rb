@@ -15,9 +15,7 @@ module Souyuz
       elsif Souyuz.project.android?
         path = apk_file
         if config[:keystore_path] && config[:keystore_alias]
-          UI.success "Jar it, sign it, zip it..."
-
-          jarsign_and_zipalign
+          apksign_and_zipalign
         end
 
         path
@@ -44,18 +42,20 @@ module Souyuz
       "#{build_path}/#{assembly_name}.apk"
     end
 
-    def jarsign_and_zipalign
-      command = JavaSignCommandGenerator.generate
+    def apksign_and_zipalign
+      UI.success "Start signing process..."
+
+      command = ZipalignCommandGenerator.generate
+      FastlaneCore::CommandExecutor.execute(command: command,
+                                            print_all: true,
+                                            print_command: !Souyuz.config[:silent])
+
+      command = ApkSignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
                                             print_all: false,
                                             print_command: !Souyuz.config[:silent])
 
       UI.success "Successfully signed apk #{Souyuz.cache[:build_apk_path]}"
-
-      command = AndroidZipalignCommandGenerator.generate
-      FastlaneCore::CommandExecutor.execute(command: command,
-                                            print_all: true,
-                                            print_command: !Souyuz.config[:silent])
     end
 
     #
