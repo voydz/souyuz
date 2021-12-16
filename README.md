@@ -1,7 +1,5 @@
 # Souyuz
 
-[![Build Status](https://travis-ci.org/voydz/souyuz.svg?branch=master)](https://travis-ci.org/voydz/souyuz)
-
 A fastlane component to make Xamarin builds a breeze. Souyuz is now avaialbe as an **Fastlane plugin** see [fastlane-plugin-souyuz](fastlane-plugin-souyuz) for details.
 
 *NOTE: While souyuz should continue working with your existing configuration just fine, consider using the Fastlane plugin.*
