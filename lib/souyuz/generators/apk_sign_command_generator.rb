@@ -4,12 +4,12 @@ module Souyuz
     class << self
       def generate
         build_apk_path = Souyuz.cache[:build_apk_path]
-        Souyuz.cache[:signed_apk_path] = "#{build_apk_path}-unaligned"
+        Souyuz.cache[:signed_apk_path] = "#{build_apk_path}-signed"
 
         parts = prefix
         parts << detect_apksigner_executable
         parts += options
-        parts << build_apk_path
+        parts << Souyuz.cache[:aligned_apk_path]
         parts += pipe
 
         parts
