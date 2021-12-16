@@ -30,7 +30,7 @@ module Souyuz
         options << "sign"
         options << "--verbose" if $verbose
         options << "--ks \"#{Souyuz.config[:keystore_path]}\""
-        options << "--ks-pass \"#{Souyuz.config[:keystore_password]}\""
+        options << "--ks-pass \"pass:#{Souyuz.config[:keystore_password]}\""
         options << "--ks-key-alias \"#{Souyuz.config[:keystore_alias]}\""
         options << "--out \"#{Souyuz.cache[:signed_apk_path]}\""
 
