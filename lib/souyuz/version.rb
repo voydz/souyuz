@@ -1,5 +1,5 @@
 
 module Souyuz
-  VERSION = "0.10.4"
+  VERSION = "0.11.0"
   DESCRIPTION = "A fastlane component to make Xamarin builds a breeze"
 end
