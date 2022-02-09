@@ -31,7 +31,7 @@ module Souyuz
         options << "-p:BuildIpa=true" if Souyuz.project.ios?
         if config[:solution_path]
           solution_dir = File.dirname(config[:solution_path])
-          options << "-p:SolutionDir=#{solution_dir}/"
+          options << "-p:SolutionDir=\"#{solution_dir}/\""
         end
 
         options
@@ -52,7 +52,7 @@ module Souyuz
       def project
         path = []
 
-        path << Souyuz.config[:project_path] # if Souyuz.project.android?
+        path << "\"#{Souyuz.config[:project_path]}\"" # if Souyuz.project.android?
         # path << Souyuz.config[:solution_path] if Souyuz.project.ios? or Souyuz.project.osx?
 
         path
