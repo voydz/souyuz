@@ -44,7 +44,8 @@ module Souyuz
       def targets
         targets = []
         targets += build_targets
-        targets << "-t:SignAndroidPackage" if Souyuz.project.android?
+        targets << "-t:SignAndroidPackage" if Souyuz.project.android? and !Souyuz.config[:keystore_path] and !Souyuz.config[:keystore_alias] and !Souyuz.config[:keystore_password]
+        targets << "-t:Package" if Souyuz.project.android? and Souyuz.config[:keystore_path] and Souyuz.config[:keystore_alias] and Souyuz.config[:keystore_password]
 
         targets
       end

@@ -14,7 +14,7 @@ module Souyuz
         path
       elsif Souyuz.project.android?
         path = apk_file
-        if config[:keystore_path] && config[:keystore_alias]
+        if config[:keystore_path] && config[:keystore_alias] && config[:keystore_password]
           apksign_and_zipalign
         end
 
