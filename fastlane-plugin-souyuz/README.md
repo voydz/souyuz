@@ -29,9 +29,11 @@ platform :android do
     souyuz(
       platform: "android",
       build_configuration: "Release",
-      keystore_path: "{PATH_TO_YOUR_KEYSTORE}",
-      keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}",
-      keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}"
+      build_target: ['Clean','Build'], # OPTIONAL - default to 'Build'
+      keystore_path: "{PATH_TO_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      key_password: "{YOUR_SUPER_SECRET_KEY_PASSWORD}" # OPTIONAL - if not provided Xamarin default keystore will be used
     )
   end
 end

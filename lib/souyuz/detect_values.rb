@@ -27,6 +27,8 @@ module Souyuz
       detect_build_tools
       detect_info_plist
       detect_assembly_name doc_csproj # we can only do that for android *after* we detected the android manitfest
+      detect_compile_constants doc_csproj # all platforms
+      detect_android_package_format doc_csproj
 
       return config
     end
@@ -79,7 +81,10 @@ module Souyuz
       platform = Souyuz.config[:build_platform]
 
       doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidManifest']/text()")
-      #doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
+
+      # For AAB builds: "<AndroidManifest> tag might be missed, so falling back to first available value"
+      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest').first if doc_node.empty?
+
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
     end
 
@@ -158,6 +163,24 @@ module Souyuz
       path = path.gsub('\\', '/') # dir separator fix
       path = File.expand_path(path) # absolute dir
       path
+    end
+
+    def self.detect_compile_constants(doc_csproj)
+      configuration = Souyuz.config[:build_configuration]
+      platform = Souyuz.config[:build_platform]
+
+      compile_constants_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='DefineConstants']/text()")
+      Souyuz.cache[:compile_constants] = compile_constants_node.text.gsub(";", " ")
+      compile_constants_node.text
+    end
+
+    def self.detect_android_package_format(doc_csproj)
+      configuration = Souyuz.config[:build_configuration]
+      platform = Souyuz.config[:build_platform]
+
+      android_package_format_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidPackageFormat']/text()")
+      Souyuz.cache[:android_package_format] = android_package_format_node.text
+      android_package_format_node.text
     end
   end
 end
