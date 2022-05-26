@@ -29,7 +29,7 @@ module Souyuz
         options << "-p:Configuration=#{config[:build_configuration]}" if config[:build_configuration]
         options << "-p:Platform=#{config[:build_platform]}" if Souyuz.project.ios? and config[:build_platform]
         options << "-p:BuildIpa=true" if Souyuz.project.ios?
-        options << "-p:DefineConstants=\"#{config[:compile_constants]}\"" if config[:compile_constants]
+        options << "-p:DefineConstants=\"#{Souyuz.cache[:compile_constants]}\"" if Souyuz.cache[:compile_constants]
         if config[:solution_path]
           solution_dir = File.dirname(config[:solution_path])
           options << "-p:SolutionDir=\"#{solution_dir}/\""
