@@ -75,7 +75,11 @@ module Souyuz
     def self.detect_manifest(doc_csproj)
       return if Souyuz.config[:manifest_path] or Souyuz.config[:platform] != Platform::ANDROID
 
-      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
+      configuration = Souyuz.config[:build_configuration]
+      platform = Souyuz.config[:build_platform]
+
+      doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidManifest']/text()")
+      #doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
     end
 
