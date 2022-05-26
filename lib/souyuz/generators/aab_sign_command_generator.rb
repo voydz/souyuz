@@ -1,6 +1,6 @@
 module Souyuz
-  # Responsible for building the apksigner command
-  class ApkSignCommandGenerator
+  # Responsible for building the aabsigner command
+  class AabSignCommandGenerator
     class << self
       def generate
         android_package_path = Souyuz.cache[:build_android_package_path]
@@ -9,9 +9,7 @@ module Souyuz
         Souyuz.cache[:signed_android_package_path] = "#{File.join("#{android_package_dir}", "#{android_package_filename_with_extension}")}"
 
         parts = prefix
-        parts << detect_apksigner_executable
         parts += options
-        parts << Souyuz.cache[:aligned_apk_path]
         parts += pipe
 
         parts
@@ -21,21 +19,17 @@ module Souyuz
         [""]
       end
 
-      def detect_apksigner_executable
-        apksigner = File.join(Souyuz.config[:buildtools_path], 'apksigner')
-
-        apksigner
-      end
-
       def options
         options = []
-        options << "sign"
+        options << "jarsigner"
         options << "--verbose" if $verbose
-        options << "--ks \"#{Souyuz.config[:keystore_path]}\""
-        options << "--ks-pass \"pass:#{Souyuz.config[:keystore_password]}\""
-        options << "--ks-key-alias \"#{Souyuz.config[:keystore_alias]}\""
-        options << "--key-pass \"pass:#{Souyuz.config[:key_password]}\""
-        options << "--out \"#{Souyuz.cache[:signed_android_package_path]}\""
+        options << "-keystore \"#{Souyuz.config[:keystore_path]}\""
+        options << "-storepass \"#{Souyuz.config[:keystore_password]}\""
+        options << "-keypass \"#{Souyuz.config[:key_password]}\""
+        options << "-digestalg \"SHA-256\""
+        options << "-sigalg \"SHA256withRSA\""
+        options << "-signedjar \"#{Souyuz.cache[:signed_android_package_path]}\" \"#{Souyuz.cache[:build_android_package_path]}\""
+        options << "\"#{Souyuz.config[:keystore_alias]}\""
 
         options
       end

@@ -3,13 +3,15 @@ module Souyuz
   class ZipalignCommandGenerator
     class << self
       def generate
-        build_apk_path = Souyuz.cache[:build_apk_path]
-        Souyuz.cache[:aligned_apk_path] = "#{build_apk_path}-aligned"
+        android_package_path = Souyuz.cache[:build_android_package_path]
+        android_package_dir = File.dirname(android_package_path)
+        android_package_filename_with_extension = "#{File.basename(android_package_path, ".*")}-aligned#{File.extname(android_package_path)}"
+        Souyuz.cache[:aligned_apk_path] = "#{File.join("#{android_package_dir}", "#{android_package_filename_with_extension}")}"
 
         parts = prefix
         parts << zipalign_apk
         parts += options
-        parts << build_apk_path
+        parts << android_package_path
         parts << Souyuz.cache[:aligned_apk_path]
         parts += pipe
 

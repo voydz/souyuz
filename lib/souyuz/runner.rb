@@ -13,10 +13,20 @@ module Souyuz
 
         path
       elsif Souyuz.project.android?
-        path = apk_file
-        if config[:keystore_path] && config[:keystore_alias] && config[:keystore_password]
-          apksign_and_zipalign
+        android_package_format = Souyuz.cache[:android_package_format]
+        path = android_package_file android_package_format
+
+        if android_package_format.casecmp('apk').zero?
+          if config[:keystore_path] && config[:keystore_alias] && config[:keystore_password]
+            apksign_and_zipalign
+          end
+        elsif android_package_format.casecmp('aab').zero?
+          if config[:keystore_path] && config[:keystore_alias] && config[:keystore_password]
+            sign_aab_file
+          end
         end
+
+        
 
         path
       end
@@ -33,18 +43,18 @@ module Souyuz
     # android build stuff to follow..
     #
 
-    def apk_file
+    def android_package_file(file_format)
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      build_apk_path = "#{build_path}/#{assembly_name}.apk"
-      Souyuz.cache[:build_apk_path] = build_apk_path
+      build_android_package_path = "#{build_path}/#{assembly_name}.#{file_format}"
+      Souyuz.cache[:build_android_package_path] = build_android_package_path
 
-      build_apk_path
+      build_android_package_path
     end
 
     def apksign_and_zipalign
-      UI.success "Start signing process..."
+      UI.success "Start signing APK process..."
 
       command = ZipalignCommandGenerator.generate
       FastlaneCore::CommandExecutor.execute(command: command,
@@ -58,11 +68,20 @@ module Souyuz
 
       # move signed apk back to build apk path
       FileUtils.cp_r(
-        Souyuz.cache[:signed_apk_path],
-        Souyuz.cache[:build_apk_path],
+        Souyuz.cache[:signed_android_package_path],
+        Souyuz.cache[:build_android_package_path],
         :remove_destination => true)
 
-      UI.success "Successfully signed apk #{Souyuz.cache[:build_apk_path]}"
+      UI.success "Successfully signed apk #{Souyuz.cache[:build_android_package_path]}"
+    end
+
+    def sign_aab_file
+      UI.success "Start signing AAB process..."
+
+      command = AabSignCommandGenerator.generate
+      FastlaneCore::CommandExecutor.execute(command: command,
+                                            print_all: false,
+                                            print_command: !Souyuz.config[:silent])
     end
 
     #

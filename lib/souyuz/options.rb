@@ -78,10 +78,18 @@ module Souyuz
                                      env_name: "SOUYUZ_ANDROID_KEYSTORE_PASSWORD",
                                      description: "Password of the keystore",
                                      optional: true),
+        FastlaneCore::ConfigItem.new(key: :key_password,
+                                     env_name: "SOUYUZ_ANDROID_KEY_PASSWORD",
+                                     description: "Password of the key",
+                                     optional: true),
         FastlaneCore::ConfigItem.new(key: :keystore_tsa,
                                      default_value: 'http://timestamp.digicert.com',
                                      env_name: "SOUYUZ_ANDROID_KEYSTORE_TSA",
                                      description: "TSA for apksigner",
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :compile_constants,
+                                     env_name: "SOUYUZ_COMPILE_CONSTANTS",
+                                     description: "Compile constants for seleted configuration",
                                      optional: true)
       ]
     end
