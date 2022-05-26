@@ -81,7 +81,10 @@ module Souyuz
       platform = Souyuz.config[:build_platform]
 
       doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidManifest']/text()")
-      #doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
+
+      # For AAB builds: "<AndroidManifest> tag might be missed, so falling back to first available value"
+      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest').first if doc_node.empty?
+
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
     end
 
@@ -167,7 +170,7 @@ module Souyuz
       platform = Souyuz.config[:build_platform]
 
       compile_constants_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='DefineConstants']/text()")
-      Souyuz.config[:compile_constants] = compile_constants_node.text.gsub(";", " ")
+      Souyuz.cache[:compile_constants] = compile_constants_node.text.gsub(";", " ")
       compile_constants_node.text
     end
 
