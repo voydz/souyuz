@@ -1,18 +1,54 @@
 require 'fastlane'
+require 'provision_util'
 
 module Souyuz
   class Runner
     def run
       config = Souyuz.config
 
-      build_app
-
       if Souyuz.project.ios? or Souyuz.project.osx?
+        if config[:provision_profile_uuid]
+          provision_profile_default_path = "#{Dir.home}/Library/MobileDevice/Provisioning\ Profiles/".freeze
+          provision_profile_path = File.join provision_profile_default_path, "#{config[:provision_profile_uuid]}.mobileprovision"
+          cert = ProvisionUtil::get_cert_from_provision(provision_profile_path)
+          subject = Hash[cert.subject.to_a.map {|arr|  [arr[0], arr[1]]}]
+          # config[:provision_profile_uuid] -> CodesignProvision
+          name = subject['CN'] # CodesignKey
+
+          file = File.new(Souyuz.config[:project_path])
+          doc = Nokogiri::XML(file.read)
+          file.close
+
+          configuration = "'#{config[:build_configuration]}|#{config[:build_platform]}'"
+
+          [
+            ['CodesignProvision', config[:provision_profile_uuid]],
+            ['CodesignKey', name]
+          ].each do |dict|
+            doc.search('PropertyGroup').each do |group|
+              next unless !group['Condition'].nil? && group['Condition'].include?(configuration)
+              property = group.search(dict[0])
+              if property.size > 0
+                property[0].content = dict[1]
+              end
+            end
+          end
+
+
+          xml = doc.to_xml
+          UI.command_output(xml) if $verbose
+          File.write(Souyuz.config[:project_path], xml)
+        end
+
+        build_app
+        
         compress_and_move_dsym
         path = ipa_file
 
         path
       elsif Souyuz.project.android?
+        build_app
+
         android_package_format = Souyuz.cache[:android_package_format]
         path = android_package_file android_package_format
 
