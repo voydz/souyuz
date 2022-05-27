@@ -2,6 +2,10 @@ require "fastlane"
 
 module Souyuz
   class Options
+
+    PROVISION_FILES_DEFAULT_LOCATION = "#{Dir.home}/Library/MobileDevice/Provisioning\ Profiles/".freeze
+    BUILD_PLATFORMS = %w(iPhone iPhoneSimulator AnyCPU).freeze
+
     def self.available_options
       [
         FastlaneCore::ConfigItem.new(key: :silent,
@@ -20,7 +24,11 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :build_platform,
                                      env_name: "SOUYUZ_BUILD_PLATFORM",
                                      description: "Build platform value",
-                                     default_value: 'iPhone'),
+                                     default_value: 'iPhone',
+                                     is_string: true,
+                                     verify_block: proc do |value|
+                                      UI.user_error!("Unsupported build platform, use one of #{BUILD_PLATFORMS}") unless BUILD_PLATFORMS.include? value
+                                     end),
         FastlaneCore::ConfigItem.new(key: :build_target,
                                      env_name: "SOUYUZ_BUILD_TARGET",
                                      description: "Build targets to build",
@@ -86,7 +94,19 @@ module Souyuz
                                      default_value: 'http://timestamp.digicert.com',
                                      env_name: "SOUYUZ_ANDROID_KEYSTORE_TSA",
                                      description: "TSA for apksigner",
-                                     optional: true)
+                                     optional: true),
+        FastlaneCore::ConfigItem.new(key: :provision_profile_uuid,
+                                     env_name: "SOUYUZ_IOS_PP_UUID",
+                                     description: "UUID of provision profile in default dir",
+                                     is_string: true,
+                                     optional: true,
+                                     verify_block: proc do |uuid|
+                                      file = File.join PROVISION_FILES_DEFAULT_LOCATION, "#{uuid}.mobileprovision"
+                                      UI.user_error!('Empty input') if file.nil?
+                                      UI.user_error!("#{file} does not exist") unless File.exist? file
+                                      UI.user_error!("#{file} is not a file") unless File.file? file
+                                      # check if newer PP exist
+                                     end)
       ]
     end
   end
