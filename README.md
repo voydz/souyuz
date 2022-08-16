@@ -4,6 +4,9 @@ A fastlane component to make Xamarin builds a breeze. Souyuz is now avaialbe as 
 
 *NOTE: While souyuz should continue working with your existing configuration just fine, consider using the Fastlane plugin.*
 
+# inikityuk 16/08/2022
+* iOS: added ability to create *.xcarchive on build
+
 # inikityuk 27/05/2022
 ### Few major changes to "Souyuz" plugin
 * Android: added ability to build AAB files (including signing)

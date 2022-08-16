@@ -23,7 +23,8 @@ platform :ios do
       build_platform: "iPhone", # OPTIONAL -> One of "iPhone iPhoneSimulator AnyCPU" -> default to iOS:"iPhone", Android:"AnyCPU"
       build_configuration: "Release", # OPTIONAL -> default to "Release"
       plist_path: "./iOS/Info.plist",
-      provision_profile_uuid: "{PROVISIONING_PROFILE_TO_SIGN_WITH}" # OPTIONAL -> default to Visual Studio configuration
+      provision_profile_uuid: "{PROVISIONING_PROFILE_TO_SIGN_WITH}", # OPTIONAL -> default to Visual Studio configuration
+      archive_app: true # Create *.xcarchive file, -> default to "false"
     )
   end
 end
