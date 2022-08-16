@@ -106,7 +106,12 @@ module Souyuz
                                       UI.user_error!("#{file} does not exist") unless File.exist? file
                                       UI.user_error!("#{file} is not a file") unless File.file? file
                                       # check if newer PP exist
-                                     end)
+                                     end),
+        FastlaneCore::ConfigItem.new(key: :archive_app,
+                                    env_name: "SOUYUZ_CREATE_ARCHIVE",
+                                    description: "Create *.xcarchive file, only for iOS",
+                                    default_value: false,
+                                    is_string: false),                             
       ]
     end
   end

@@ -7,6 +7,10 @@ module Souyuz
       config = Souyuz.config
 
       if Souyuz.project.ios? or Souyuz.project.osx?
+
+        configuration = "'#{config[:build_configuration]}|#{config[:build_platform]}'"
+
+        # Set provisioning profile
         if config[:provision_profile_uuid]
           provision_profile_default_path = "#{Dir.home}/Library/MobileDevice/Provisioning\ Profiles/".freeze
           provision_profile_path = File.join provision_profile_default_path, "#{config[:provision_profile_uuid]}.mobileprovision"
@@ -19,8 +23,6 @@ module Souyuz
           doc = Nokogiri::XML(file.read)
           file.close
 
-          configuration = "'#{config[:build_configuration]}|#{config[:build_platform]}'"
-
           [
             ['CodesignProvision', config[:provision_profile_uuid]],
             ['CodesignKey', name]
@@ -32,6 +34,25 @@ module Souyuz
                 property[0].content = dict[1]
               end
             end
+          end
+
+
+          xml = doc.to_xml
+          UI.command_output(xml) if $verbose
+          File.write(Souyuz.config[:project_path], xml)
+        end
+        
+        # Add "ArchiveOnBuild"
+        if config[:archive_app] == true
+          file = File.new(Souyuz.config[:project_path])
+          doc = Nokogiri::XML(file.read)
+          file.close
+
+          doc.search('PropertyGroup').each do |group|
+            next unless !group['Condition'].nil? && group['Condition'].include?(configuration)
+            archiveNode = Nokogiri::XML::Node.new "ArchiveOnBuild", doc
+            archiveNode.content = config[:archive_app]
+            group.add_child(archiveNode)
           end
 
 
