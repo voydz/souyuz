@@ -16,6 +16,11 @@ A fastlane component to make Xamarin builds a breeze. Souyuz is now avaialbe as 
 * iOS: added ability to specify provisioning profile to sign with
 * Updated readme with most common properties and basic usage
 
+## How to use this fork
+* Add to your "Pluginfile" inside "fastlane" folder one of this lines:
+* gem 'fastlane-plugin-souyuz', github: "inikityuk/souyuz" # To pull gem from this fork (instead of official repo)
+* gem 'fastlane-plugin-souyuz', path: "/{LOCAL_PATH_TO_PLUGIN}}/souyuz_fastlane_xamarin_plugin" # For local development (if you wish to apply your own modifications)
+
 ## Using MSBuild
 
 Since Version 0.7.0 souyuz is using `msbuild` by default, because according to Xamarin `xbuild` is deprecated and will be removed soon.
