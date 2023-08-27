@@ -104,7 +104,7 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      build_android_package_path = "#{build_path}/#{assembly_name}.#{file_format}"
+      build_android_package_path = File.join("#{build_path}", "#{assembly_name}.#{file_format}")
       Souyuz.cache[:build_android_package_path] = build_android_package_path
 
       build_android_package_path

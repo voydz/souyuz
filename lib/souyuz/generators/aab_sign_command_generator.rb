@@ -9,10 +9,19 @@ module Souyuz
         Souyuz.cache[:signed_android_package_path] = "#{File.join("#{android_package_dir}", "#{android_package_filename_with_extension}")}"
 
         parts = prefix
+        parts << detect_jarsigner_executable
         parts += options
         parts += pipe
 
         parts
+      end
+
+      def detect_jarsigner_executable
+        jarsigner = "/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home/bin/jarsigner"
+        
+        UI.success "*** IGOR-TESTING *** -> jarsigner path: #{jarsigner}"
+
+        jarsigner
       end
 
       def prefix
@@ -21,7 +30,6 @@ module Souyuz
 
       def options
         options = []
-        options << "jarsigner"
         options << "--verbose" if $verbose
         options << "-keystore \"#{Souyuz.config[:keystore_path]}\""
         options << "-storepass \"#{Souyuz.config[:keystore_password]}\""
@@ -39,6 +47,16 @@ module Souyuz
 
         pipe
       end
+
+      # VS does that
+      # /Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home/bin/jarsigner 
+      # -keystore "debug.keystore" 
+      # -storepass android 
+      # -keypass android 
+      # -digestalg SHA-256 
+      # -sigalg SHA256withRSA 
+      # -signedjar com.vald.dynamo.aab  
+      # androiddebugkey 
     end
   end
 end
