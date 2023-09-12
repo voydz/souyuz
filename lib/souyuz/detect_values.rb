@@ -65,7 +65,7 @@ module Souyuz
       return if Souyuz.config[:output_path]
 
       configuration = Souyuz.config[:build_configuration]
-      platform = Souyuz.config[:build_platform]
+      #platform = Souyuz.config[:build_platform]
 
       target_framework_node = doc_csproj.css('PropertyGroup > TargetFramework')
       target_framework = target_framework_node.text
@@ -84,7 +84,7 @@ module Souyuz
       return if Souyuz.config[:manifest_path] or Souyuz.config[:platform] != Platform::ANDROID
 
       configuration = Souyuz.config[:build_configuration]
-      platform = Souyuz.config[:build_platform]
+      platform = "AnyCPU"
 
       doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidManifest']/text()")
 
@@ -170,7 +170,7 @@ module Souyuz
 
     def self.detect_compile_constants(doc_csproj)
       configuration = Souyuz.config[:build_configuration]
-      platform = Souyuz.config[:build_platform]
+      platform = "AnyCPU"
 
       compile_constants_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='DefineConstants']/text()")
       Souyuz.cache[:compile_constants] = compile_constants_node.text.gsub(";", " ")
@@ -179,7 +179,7 @@ module Souyuz
 
     def self.detect_android_package_format(doc_csproj)
       configuration = Souyuz.config[:build_configuration]
-      platform = Souyuz.config[:build_platform]
+      platform = "AnyCPU"
 
       android_package_format_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidPackageFormat']/text()")
       Souyuz.cache[:android_package_format] = android_package_format_node.text

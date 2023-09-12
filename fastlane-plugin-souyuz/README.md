@@ -20,7 +20,7 @@ platform :ios do
     souyuz(
       platform: "ios",
       build_target: ['Clean','Build'], # OPTIONAL - default to 'Build'
-      build_platform: "iPhone", # OPTIONAL -> One of "iPhone iPhoneSimulator AnyCPU" -> default to iOS:"iPhone", Android:"AnyCPU"
+      build_platform: "ios-arm64", # OPTIONAL -> One of "ios-arm64 iossimulator-x64 AnyCPU" -> default to iOS:"ios-arm64", Android:"AnyCPU"
       build_configuration: "Release", # OPTIONAL -> default to "Release"
       plist_path: "./iOS/Info.plist",
       provision_profile_uuid: "{PROVISIONING_PROFILE_TO_SIGN_WITH}", # OPTIONAL -> default to Visual Studio configuration
@@ -34,7 +34,7 @@ platform :android do
       platform: "android",
       build_configuration: "Release",
       build_target: ['Clean','Build'], # OPTIONAL - default to 'Build'
-      build_platform: "AnyCPU", # OPTIONAL -> One of "iPhone iPhoneSimulator AnyCPU" -> default to iOS:"iPhone", Android:"AnyCPU"
+      build_platform: "AnyCPU", # OPTIONAL -> One of "ios-arm64 iossimulator-x64 AnyCPU" -> default to iOS:"ios-arm64", Android:"AnyCPU"
       keystore_path: "{PATH_TO_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
       keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
       keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}", # OPTIONAL - if not provided Xamarin default keystore will be used
