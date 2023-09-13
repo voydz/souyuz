@@ -22,8 +22,6 @@ module Souyuz
         buildtools = Souyuz.config[:buildtools_root_path]
         version = Dir.entries(buildtools).sort.last
   
-        UI.success "*** IGOR-TESTING *** -> buildtools: #{buildtools} -> Version: #{version}"
-
         zipalign = File.join(buildtools, version, 'zipalign')
 
         zipalign

@@ -65,19 +65,12 @@ module Souyuz
       return if Souyuz.config[:output_path]
 
       configuration = Souyuz.config[:build_configuration]
-      #platform = Souyuz.config[:build_platform]
 
       target_framework_node = doc_csproj.css('PropertyGroup > TargetFramework')
       target_framework = target_framework_node.text
 
       output_path = File.join("bin", "#{configuration}", "#{target_framework}")
-
-      UI.success "*** IGOR-TESTING *** output_path: #{output_path}"
-      UI.success "*** IGOR-TESTING *** target_framework: #{target_framework}"
-
       Souyuz.config[:output_path] = abs_project_path output_path
-
-      UI.success "*** IGOR-TESTING *** Souyuz.config[:output_path]: #{Souyuz.config[:output_path]}"
     end
 
     def self.detect_manifest(doc_csproj)
@@ -119,9 +112,6 @@ module Souyuz
         doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed
         Souyuz.cache[:android_min_sdk_version] = doc.xpath('string(//manifest/uses-sdk/@android:minSdkVersion)')
         Souyuz.cache[:android_target_sdk_version] = doc.xpath('string(//manifest/uses-sdk/@android:targetSdkVersion)')
-
-        UI.success "*** IGOR-TESTING *** -> android_min_sdk_version: #{Souyuz.cache[:android_min_sdk_version]}"
-        UI.success "*** IGOR-TESTING *** -> android_target_sdk_version: #{Souyuz.cache[:android_target_sdk_version]}"
       end
     end
 

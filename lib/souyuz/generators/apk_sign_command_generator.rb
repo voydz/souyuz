@@ -25,8 +25,6 @@ module Souyuz
       def detect_java_executable
         java = "/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home/bin/java -jar"
         
-        UI.success "*** IGOR-TESTING *** -> java path + parameter: #{java}"
-
         java
       end
 
@@ -35,8 +33,6 @@ module Souyuz
         version = Dir.entries(microsoft_buildtools).sort.last
         
         apksigner = "#{File.join(microsoft_buildtools, version, 'tools', 'apksigner.jar')}"
-
-        UI.success "*** IGOR-TESTING *** -> microsoft_buildtools path for apksigner: #{microsoft_buildtools} -> Version: #{version}"
 
         apksigner
       end

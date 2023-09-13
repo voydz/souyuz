@@ -18,8 +18,6 @@ module Souyuz
 
       def detect_jarsigner_executable
         jarsigner = "/Library/Java/JavaVirtualMachines/microsoft-11.jdk/Contents/Home/bin/jarsigner"
-        
-        UI.success "*** IGOR-TESTING *** -> jarsigner path: #{jarsigner}"
 
         jarsigner
       end
