@@ -24,9 +24,11 @@ module Souyuz
 
       detect_output_path doc_csproj
       detect_manifest doc_csproj
-      detect_build_tools
       detect_info_plist
       detect_assembly_name doc_csproj # we can only do that for android *after* we detected the android manitfest
+      detect_min_max_sdk doc_csproj # we can only do that for android *after* we detected the android manitfest
+      detect_compile_constants doc_csproj # all platforms
+      detect_android_package_format doc_csproj
 
       return config
     end
@@ -63,34 +65,26 @@ module Souyuz
       return if Souyuz.config[:output_path]
 
       configuration = Souyuz.config[:build_configuration]
-      platform = Souyuz.config[:build_platform]
 
-      doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='OutputPath']/text()")
-      output_path = doc_node.text
-      UI.user_error! 'Not able to find output path automatically, try to specify it via `output_path` parameter.' unless output_path
+      target_framework_node = doc_csproj.css('PropertyGroup > TargetFramework')
+      target_framework = target_framework_node.text
 
+      output_path = File.join("bin", "#{configuration}", "#{target_framework}")
       Souyuz.config[:output_path] = abs_project_path output_path
     end
 
     def self.detect_manifest(doc_csproj)
       return if Souyuz.config[:manifest_path] or Souyuz.config[:platform] != Platform::ANDROID
 
-      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest')
+      configuration = Souyuz.config[:build_configuration]
+      platform = "AnyCPU"
+
+      doc_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidManifest']/text()")
+
+      # For AAB builds: "<AndroidManifest> tag might be missed, so falling back to first available value"
+      doc_node = doc_csproj.css('PropertyGroup > AndroidManifest').first if doc_node.empty?
+
       Souyuz.config[:manifest_path] = abs_project_path doc_node.text
-    end
-
-    def self.detect_build_tools
-      return if Souyuz.config[:buildtools_path]
-
-      UI.user_error! "Please ensure that the Android SDK is installed and the ANDROID_HOME variable is set correctly" unless ENV['ANDROID_HOME']
-
-      # determine latest buildtool version
-      buildtools = File.join(ENV['ANDROID_HOME'], 'build-tools')
-      version = Dir.entries(buildtools).sort.last
-
-      UI.success "Using Buildtools Version: #{version}..."
-
-      Souyuz.config[:buildtools_path] = File.join(buildtools, version)
     end
 
     def self.detect_info_plist
@@ -110,6 +104,14 @@ module Souyuz
       elsif Souyuz.config[:platform] == Platform::ANDROID
         doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed
         Souyuz.config[:assembly_name] = doc.xpath('string(//manifest/@package)')
+      end
+    end
+
+    def self.detect_min_max_sdk(doc_csproj)
+      if Souyuz.config[:platform] == Platform::ANDROID
+        doc = get_parser_handle Souyuz.config[:manifest_path] # explicitly for this call, no cache needed
+        Souyuz.cache[:android_min_sdk_version] = doc.xpath('string(//manifest/uses-sdk/@android:minSdkVersion)')
+        Souyuz.cache[:android_target_sdk_version] = doc.xpath('string(//manifest/uses-sdk/@android:targetSdkVersion)')
       end
     end
 
@@ -154,6 +156,24 @@ module Souyuz
       path = path.gsub('\\', '/') # dir separator fix
       path = File.expand_path(path) # absolute dir
       path
+    end
+
+    def self.detect_compile_constants(doc_csproj)
+      configuration = Souyuz.config[:build_configuration]
+      platform = "AnyCPU"
+
+      compile_constants_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='DefineConstants']/text()")
+      Souyuz.cache[:compile_constants] = compile_constants_node.text.gsub(";", " ")
+      compile_constants_node.text
+    end
+
+    def self.detect_android_package_format(doc_csproj)
+      configuration = Souyuz.config[:build_configuration]
+      platform = "AnyCPU"
+
+      android_package_format_node = doc_csproj.xpath("/*[local-name()='Project']/*[local-name()='PropertyGroup'][translate(@*[local-name() = 'Condition'],'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz') = \" '$(configuration)|$(platform)' == '#{configuration.downcase}|#{platform.downcase}' \"]/*[local-name()='AndroidPackageFormat']/text()")
+      Souyuz.cache[:android_package_format] = android_package_format_node.text
+      android_package_format_node.text
     end
   end
 end

@@ -4,6 +4,7 @@ require 'souyuz/manager'
 require 'souyuz/generators/build_command_generator'
 require 'souyuz/generators/zipalign_command_generator'
 require 'souyuz/generators/apk_sign_command_generator'
+require 'souyuz/generators/aab_sign_command_generator'
 require 'souyuz/generators/zip_dsym_command_generator'
 require 'souyuz/runner'
 require 'souyuz/options'
@@ -24,8 +25,8 @@ module Souyuz
 
     def config=(value)
       @config = value
-      DetectValues.set_additional_default_values
       @cache = {}
+      DetectValues.set_additional_default_values
     end
   end
 

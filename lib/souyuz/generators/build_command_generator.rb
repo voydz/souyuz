@@ -26,9 +26,10 @@ module Souyuz
 
         options = []
         options << config[:extra_build_options] if config[:extra_build_options]
-        options << "-p:Configuration=#{config[:build_configuration]}" if config[:build_configuration]
-        options << "-p:Platform=#{config[:build_platform]}" if Souyuz.project.ios? and config[:build_platform]
+        options << "-c #{config[:build_configuration]}" if config[:build_configuration]
+        options << "-p:RuntimeIdentifier=#{config[:build_platform]}" if Souyuz.project.ios? and config[:build_platform]
         options << "-p:BuildIpa=true" if Souyuz.project.ios?
+        options << "-p:DefineConstants=\"#{Souyuz.cache[:compile_constants]}\"" if Souyuz.cache[:compile_constants]
         if config[:solution_path]
           solution_dir = File.dirname(config[:solution_path])
           options << "-p:SolutionDir=\"#{solution_dir}/\""
@@ -44,7 +45,8 @@ module Souyuz
       def targets
         targets = []
         targets += build_targets
-        targets << "-t:SignAndroidPackage" if Souyuz.project.android?
+        targets << "-t:SignAndroidPackage" if Souyuz.project.android? and !Souyuz.config[:keystore_path] and !Souyuz.config[:keystore_alias] and !Souyuz.config[:keystore_password]
+        targets << "-t:Package" if Souyuz.project.android? and Souyuz.config[:keystore_path] and Souyuz.config[:keystore_alias] and Souyuz.config[:keystore_password]
 
         targets
       end

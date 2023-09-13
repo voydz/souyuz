@@ -19,8 +19,12 @@ platform :ios do
   lane :example do
     souyuz(
       platform: "ios",
-      build_configuration: "Release",
-      plist_path: "./iOS/Info.plist"
+      build_target: ['Clean','Build'], # OPTIONAL - default to 'Build'
+      build_platform: "ios-arm64", # OPTIONAL -> One of "ios-arm64 iossimulator-x64 AnyCPU" -> default to iOS:"ios-arm64", Android:"AnyCPU"
+      build_configuration: "Release", # OPTIONAL -> default to "Release"
+      plist_path: "./iOS/Info.plist",
+      provision_profile_uuid: "{PROVISIONING_PROFILE_TO_SIGN_WITH}", # OPTIONAL -> default to Visual Studio configuration
+      archive_app: true # Create *.xcarchive file, -> default to "false"
     )
   end
 end
@@ -29,9 +33,12 @@ platform :android do
     souyuz(
       platform: "android",
       build_configuration: "Release",
-      keystore_path: "{PATH_TO_YOUR_KEYSTORE}",
-      keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}",
-      keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}"
+      build_target: ['Clean','Build'], # OPTIONAL - default to 'Build'
+      build_platform: "AnyCPU", # OPTIONAL -> One of "ios-arm64 iossimulator-x64 AnyCPU" -> default to iOS:"ios-arm64", Android:"AnyCPU"
+      keystore_path: "{PATH_TO_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      keystore_alias: "{ALIAS_OF_YOUR_KEYSTORE}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      keystore_password: "{YOUR_SUPER_SECRET_KEYSTORE_PASSWORD}", # OPTIONAL - if not provided Xamarin default keystore will be used
+      key_password: "{YOUR_SUPER_SECRET_KEY_PASSWORD}" # OPTIONAL - if not provided Xamarin default keystore will be used
     )
   end
 end
