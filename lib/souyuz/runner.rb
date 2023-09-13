@@ -8,7 +8,7 @@ module Souyuz
 
       if Souyuz.project.ios? or Souyuz.project.osx?
 
-        configuration = "'#{config[:build_configuration]}|#{config[:build_platform]}'"
+        configuration = "'#{config[:build_configuration]}|AnyCPU'"
 
         # Set provisioning profile
         if config[:provision_profile_uuid]
@@ -104,7 +104,7 @@ module Souyuz
       build_path = Souyuz.project.options[:output_path]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      build_android_package_path = "#{build_path}/#{assembly_name}.#{file_format}"
+      build_android_package_path = File.join("#{build_path}", "#{assembly_name}.#{file_format}")
       Souyuz.cache[:build_android_package_path] = build_android_package_path
 
       build_android_package_path
@@ -171,9 +171,10 @@ module Souyuz
 
     def compress_and_move_dsym
       build_path = Souyuz.project.options[:output_path]
+      build_platform = Souyuz.project.options[:build_platform]
       assembly_name = Souyuz.project.options[:assembly_name]
 
-      build_dsym_path = "#{build_path}/#{assembly_name}.app.dSYM"
+      build_dsym_path = "#{build_path}/#{build_platform}/#{assembly_name}.app.dSYM"
       unless File.exist? build_dsym_path
         UI.success "Did not found dSYM at #{build_dsym_path}, skipping..."
         return

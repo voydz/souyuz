@@ -4,7 +4,7 @@ module Souyuz
   class Options
 
     PROVISION_FILES_DEFAULT_LOCATION = "#{Dir.home}/Library/MobileDevice/Provisioning\ Profiles/".freeze
-    BUILD_PLATFORMS = %w(iPhone iPhoneSimulator AnyCPU).freeze
+    BUILD_PLATFORMS = %w(ios-arm64 iossimulator-x64 AnyCPU).freeze
 
     def self.available_options
       [
@@ -16,7 +16,7 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :compiler_bin,
                                      env_name: "SOUYUZ_COMPILER_BIN",
                                      description: "Path to the compiler binary",
-                                     default_value: 'msbuild'),
+                                     default_value: 'dotnet build'),
         FastlaneCore::ConfigItem.new(key: :build_configuration,
                                      env_name: "SOUYUZ_BUILD_CONFIGURATION",
                                      description: "Build configuration value",
@@ -24,7 +24,7 @@ module Souyuz
         FastlaneCore::ConfigItem.new(key: :build_platform,
                                      env_name: "SOUYUZ_BUILD_PLATFORM",
                                      description: "Build platform value",
-                                     default_value: 'iPhone',
+                                     default_value: 'AnyCPU',
                                      is_string: true,
                                      verify_block: proc do |value|
                                       UI.user_error!("Unsupported build platform, use one of #{BUILD_PLATFORMS}") unless BUILD_PLATFORMS.include? value
@@ -66,10 +66,12 @@ module Souyuz
                                      env_name: "SOUYUZ_ANDROID_MANIFEST_PATH",
                                      description: "Path to the android manifest (xml) file",
                                      optional: true),
-        FastlaneCore::ConfigItem.new(key: :buildtools_path,
-                                     env_name: "SOUYUZ_ANDROID_BUILDTOOLS_PATH",
+        FastlaneCore::ConfigItem.new(key: :buildtools_root_path,
+                                     env_name: "SOUYUZ_ANDROID_BUILDTOOLS_ROOT_PATH",
                                      description: "Path to the android build tools",
-                                     optional: true),
+                                     optional: true,
+                                     is_string: true,
+                                     default_value: "/Users/#{ENV['USER']}/Library/Developer/Xamarin/android-sdk-macosx/build-tools"),
         FastlaneCore::ConfigItem.new(key: :plist_path,
                                      env_name: "SOUYUZ_IOS_PLIST_PATH",
                                      description: "Path to the iOS plist file",
